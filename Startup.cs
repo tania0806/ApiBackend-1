@@ -66,7 +66,6 @@ namespace reportesApi
             // services.AddSingleton<PersonaService>();
             // services.AddSingleton<CarreraService>();
             // services.AddSingleton<MateriaService>();
-            services.AddSingleton<AlumnoService>();
             services.AddSingleton<ProveedorService>();
             services.AddSingleton<InsumoService>();
             services.AddSingleton<AlmacenService>();
