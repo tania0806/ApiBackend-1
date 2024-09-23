@@ -51,7 +51,7 @@ namespace reportesApi.Controllers
                     result.response.data.Usuario = loginResponse;
                     result.response.data.Status = true;
                     result.response.data.Mensaje = "Bienvenido";
-                    var token = _authService.Authenticate(user.Username, cryptedPass);
+                    var token = _authService.Authenticate(user.Correo, cryptedPass);
                     result.response.data.Token = token;
                 }
                 else

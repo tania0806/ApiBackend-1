@@ -30,10 +30,10 @@ public class UserModel
 {
     public int Id {get; set; }
     public string Nombre { get; set;}
-    public string User { get; set;}
+    public string Correo { get; set;}
     public string Perfil { get; set; }
     public string IdPerfil {get; set;}
-    public string Pwd { get; set; }
+    public string Contraseña { get; set; }
 }
 
 public class UsuarioModel
