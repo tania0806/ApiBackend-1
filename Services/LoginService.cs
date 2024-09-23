@@ -17,7 +17,7 @@ namespace reportesApi.Services
              connection = settings.ConnectionString;
         }
 
-        public UsuarioModel Login(string Correo, string Contraseña)
+        public UsuarioModel Login(string correo, string contraseña)
         {
             
             UsuarioModel usuario = new UsuarioModel();
@@ -25,13 +25,15 @@ namespace reportesApi.Services
             try
             {
                 ArrayList parametros = new ArrayList();
-                parametros.Add(new SqlParameter { ParameterName = "@Correo", SqlDbType = SqlDbType.VarChar, Value = Correo });
-                parametros.Add(new SqlParameter { ParameterName = "@Contraseña", SqlDbType = SqlDbType.VarChar, Value = Contraseña });
+                parametros.Add(new SqlParameter { ParameterName = "@Correo", SqlDbType = SqlDbType.VarChar, Value = correo });
+                parametros.Add(new SqlParameter { ParameterName = "@Contraseña", SqlDbType = SqlDbType.VarChar, Value = contraseña });
                 DataSet ds = dac.Fill("sp_login_pv", parametros);
                 if (ds.Tables[0].Rows.Count > 0)
                 {
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
+                        usuario.Correo = row["Correo"].ToString();
+                        usuario.Contraseña = row["Contraseña"].ToString();
                         usuario.Id = int.Parse(row["Id"].ToString());
                     
                     }
