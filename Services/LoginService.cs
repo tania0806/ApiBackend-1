@@ -17,7 +17,7 @@ namespace reportesApi.Services
              connection = settings.ConnectionString;
         }
 
-        public UsuarioModel Login(string user, string pass)
+        public UsuarioModel Login(string Correo, string Contraseña)
         {
             
             UsuarioModel usuario = new UsuarioModel();
@@ -25,9 +25,9 @@ namespace reportesApi.Services
             try
             {
                 ArrayList parametros = new ArrayList();
-                parametros.Add(new SqlParameter { ParameterName = "@pUsuario", SqlDbType = SqlDbType.VarChar, Value = user });
-                parametros.Add(new SqlParameter { ParameterName = "@pPass", SqlDbType = SqlDbType.VarChar, Value = pass });
-                DataSet ds = dac.Fill("sp_login_pv", parametros);
+                parametros.Add(new SqlParameter { ParameterName = "@Correo", SqlDbType = SqlDbType.VarChar, Value = Correo });
+                parametros.Add(new SqlParameter { ParameterName = "@Contraseña", SqlDbType = SqlDbType.VarChar, Value = Contraseña });
+                DataSet ds = dac.Fill("ValidarLogin", parametros);
                 if (ds.Tables[0].Rows.Count > 0)
                 {
                     foreach (DataRow row in ds.Tables[0].Rows)

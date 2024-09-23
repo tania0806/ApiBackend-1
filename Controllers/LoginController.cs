@@ -37,9 +37,9 @@ namespace reportesApi.Controllers
             result.response.data = new DataResponseLogin();
             result.response.data.Usuario = new UsuarioModel();
           
-                string cryptedPass = enc.GetSHA256(user.Userpassword);
+                string cryptedPass = enc.GetSHA256(user.Contraseña);
            
-            var loginResponse = _loginService.Login(user.Username, user.Userpassword);
+            var loginResponse = _loginService.Login(user.Correo, user.Contraseña);
             
          
            

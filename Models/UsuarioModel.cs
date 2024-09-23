@@ -6,8 +6,8 @@ namespace reportesApi.Models
         public int Id { get; set; }
         public string NombreUsuario { get; set; }
         public string NombrePersona { get; set; }
-        public string user { get; set; }
-        public string pass { get; set; }
+        public string Correo { get; set; }
+        public string Contraseña { get; set; }
 
     }
 }
