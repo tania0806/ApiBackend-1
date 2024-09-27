@@ -30,36 +30,39 @@ namespace reportesApi.Services
              
         }
 
-        // public List<GetAlmacenModel> GetAlmacen()
-        // {
-        //     ConexionDataAccess dac = new ConexionDataAccess(connection);
-        //     GetAlmacenModel almacen = new GetAlmacenModel();
+        public List<GetRegistroUsuarioModel> GetRegistroUsuario()
+        {
+            ConexionDataAccess dac = new ConexionDataAccess(connection);
+            GetRegistroUsuarioModel almacen = new GetRegistroUsuarioModel();
 
-        //     List<GetAlmacenModel> lista = new List<GetAlmacenModel>();
-        //     try
-        //     {
-        //         parametros = new ArrayList();
-        //         DataSet ds = dac.Fill("sp_get_almacenes", parametros);
-        //         if (ds.Tables[0].Rows.Count > 0)
-        //         {
+            List<GetRegistroUsuarioModel> lista = new List<GetRegistroUsuarioModel>();
+            try
+            {
+                parametros = new ArrayList();
+                DataSet ds = dac.Fill("sp_get_usuarioregistro", parametros);
+                if (ds.Tables[0].Rows.Count > 0)
+                {
 
-        //           lista = ds.Tables[0].AsEnumerable()
-        //             .Select(dataRow => new GetAlmacenModel {
-        //                 IdAlmacen = int.Parse(dataRow["IdAlmacen"].ToString()),
-        //                 Usuario = dataRow["Usuario"].ToString(),
-        //                 Nombre = dataRow["Nombre"].ToString(),
-        //                 Direccion = dataRow["Direccion"].ToString(),
-        //                 Estatus = dataRow["Estatus"].ToString(),
-        //                 FechaRegistro= dataRow["FechaRegistro"].ToString()
-        //             }).ToList();
-        //         }
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         throw ex;
-        //     }
-        //     return lista;
-        // }
+                  lista = ds.Tables[0].AsEnumerable()
+                    .Select(dataRow => new GetRegistroUsuarioModel {
+                        Id = int.Parse(dataRow["Id"].ToString()),
+                        PrimerNombre = dataRow["PrimerNombre"].ToString(),
+                        Apellidos = dataRow["Apellidos"].ToString(),
+                        Direccion = dataRow["Direccion"].ToString(),
+                        Correo = dataRow["Correo"].ToString(),
+                        Contraseña = dataRow["Contraseña"].ToString(),
+                        Token = dataRow["Token"].ToString(),
+                        Estatus = dataRow["Estatus"].ToString(),
+                        FechaRegistro= dataRow["FechaRegistro"].ToString()
+                    }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return lista;
+        }
 
         public string InsertRegistroUsuario(InsertRegistroUsuarioModel RegistroUsuario)
         {

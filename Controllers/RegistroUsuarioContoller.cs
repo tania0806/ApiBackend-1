@@ -43,7 +43,8 @@ namespace reportesApi.Controllers
         }
 
 
-        [HttpPost("Registro de Usuario")]
+      
+        [HttpPost("RegistroUsuario")]
         public IActionResult InsertRegistroUsuario([FromBody] InsertRegistroUsuarioModel req )
         {
             var objectResponse = Helper.GetStructResponse();
@@ -63,31 +64,31 @@ namespace reportesApi.Controllers
             return new JsonResult(objectResponse);
         }
 
-        // [HttpGet("GetAlmacen")]
-        // public IActionResult GetAlmacen()
-        // {
-        //     var objectResponse = Helper.GetStructResponse();
-        //     var resultado = _AlmacenService.GetAlmacen();
+        [HttpGet("GetUsuarioRegistro")]
+        public IActionResult GetRegistroUsuario()
+        {
+            var objectResponse = Helper.GetStructResponse();
+            var resultado = _RegistroUsuarioService.GetRegistroUsuario();
 
-        //     try
-        //     {
-        //         objectResponse.StatusCode = (int)HttpStatusCode.OK;
-        //         objectResponse.success = true;
-        //         objectResponse.message = "data cargado con exito";
+            try
+            {
+                objectResponse.StatusCode = (int)HttpStatusCode.OK;
+                objectResponse.success = true;
+                objectResponse.message = "data cargado con exito";
 
 
-        //         // Llamando a la función y recibiendo los dos valores.
+                // Llamando a la función y recibiendo los dos valores.
                 
-        //          objectResponse.response = resultado;
-        //     }
+                 objectResponse.response = resultado;
+            }
 
-        //     catch (System.Exception ex)
-        //     {
-        //         objectResponse.message = ex.Message;
-        //     }
+            catch (System.Exception ex)
+            {
+                objectResponse.message = ex.Message;
+            }
 
-        //     return new JsonResult(objectResponse);
-        // }
+            return new JsonResult(objectResponse);
+        }
 
        
     }

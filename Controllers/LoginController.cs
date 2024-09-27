@@ -35,9 +35,9 @@ namespace reportesApi.Controllers
             ResponseLogin result = new ResponseLogin();
             result.response = new ResponseBody();
             result.response.data = new DataResponseLogin();
-            result.response.data.Usuario = new UsuarioModel();
+            result.response.data.Correo = new UsuarioModel();
           
-                string cryptedPass = enc.GetSHA256(user.Contraseña);
+                string Contraseña = enc.GetSHA256(user.Contraseña);
            
             var loginResponse = _loginService.Login(user.Correo, user.Contraseña);
             
@@ -48,11 +48,10 @@ namespace reportesApi.Controllers
                     result.StatusCode = (int)HttpStatusCode.OK;
                     result.succes = true;
                     result.message = "Bienvenido";
-                    result.response.data.Usuario = loginResponse;
-                    result.response.data.Status = true;
+                    result.response.data.Correo = loginResponse;
+                    result.response.data.Contraseña = loginResponse;
                     result.response.data.Mensaje = "Bienvenido";
-                    var token = _authService.Authenticate(user.Correo, cryptedPass);
-                    result.response.data.Token = token;
+                    var token = _authService.Authenticate(user.Correo, Contraseña);
                 }
                 else
                 {

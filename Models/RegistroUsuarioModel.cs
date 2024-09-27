@@ -9,7 +9,7 @@ namespace reportesApi.Models
         public string Direccion {get; set;}
         public string Correo {get; set;}
         public string Contraseña {get; set;}
-        public string token {get; set;}
+        public string Token {get; set;}
         public string Estatus { get; set; }
         public string FechaRegistro { get; set; }
     }
