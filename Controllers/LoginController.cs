@@ -40,9 +40,7 @@ namespace reportesApi.Controllers
                 string Contraseña = enc.GetSHA256(user.Contraseña);
            
             var loginResponse = _loginService.Login(user.Correo, user.Contraseña);
-            
-         
-           
+
                 if (loginResponse.Id != 0)
                 {
                     result.StatusCode = (int)HttpStatusCode.OK;
@@ -59,12 +57,6 @@ namespace reportesApi.Controllers
                     result.message = "Usuario o contraseña incorrecto,";
 
                 }
-
-            
-           
-          
-           
-            
             return new JsonResult(result);
 
         }
