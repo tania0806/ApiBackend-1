@@ -10,6 +10,8 @@ namespace reportesApi.Services
     public class LoginService
     {
         private  string connection;
+        
+        
         public LoginService(IMarcatelDatabaseSetting settings)
         {
              connection = settings.ConnectionString;
@@ -31,7 +33,9 @@ namespace reportesApi.Services
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
                         usuario.Correo = row["Correo"].ToString();
-                        usuario.Contraseña = row["Contraseña"].ToString();                    
+                        usuario.Contraseña = row["Contraseña"].ToString();
+                        usuario.Id = int.Parse(row["Id"].ToString());
+                    
                     }
                 }
                 return usuario;
