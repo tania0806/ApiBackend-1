@@ -48,6 +48,7 @@ namespace reportesApi.Services
                         Id = int.Parse(dataRow["Id"].ToString()),
                         IdEntrada = int.Parse(dataRow["IdEntrada"].ToString()),
                         Insumo = dataRow["Insumo"].ToString(),
+                        DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
                         Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
                         SinCargo = decimal.Parse(dataRow["SinCargo"].ToString()),
                         Costo = decimal.Parse(dataRow["Costo"].ToString()),

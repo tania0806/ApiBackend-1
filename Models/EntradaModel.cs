@@ -9,6 +9,7 @@ namespace reportesApi.Models
         public decimal Total {get; set;}
         public string Estatus { get; set; }
         public string FechaEntrada { get; set; }
+
     }
 
     public class InsertEntradaModel 

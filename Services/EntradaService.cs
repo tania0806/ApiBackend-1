@@ -50,7 +50,8 @@ namespace reportesApi.Services
                         IdSucursal = int.Parse(dataRow["IdSucursal"].ToString()),
                         Total = decimal.Parse(dataRow["Total"].ToString()),
                         Estatus = dataRow["Estatus"].ToString(),
-                        FechaEntrada = dataRow["FechaEntrada"].ToString()
+                        FechaEntrada = dataRow["FechaEntrada"].ToString(),
+
                     }).ToList();
                 }
             }
