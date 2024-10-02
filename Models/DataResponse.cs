@@ -8,6 +8,8 @@ namespace reportesApi.Models
         public string message { get; set; }
        // public ErrorResponse error { get; set; }
         public object response { get; set; }
+        public object data { get; set; } 
+
     }
 
    /* public class ErrorResponse
