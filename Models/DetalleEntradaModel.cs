@@ -21,6 +21,7 @@ namespace reportesApi.Models
         public string Insumo{ get; set; }
         public decimal Cantidad {get; set;}
         public decimal Costo {get; set;}
+        
        
     }
 
