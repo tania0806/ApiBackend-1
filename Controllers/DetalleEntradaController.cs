@@ -52,7 +52,6 @@ namespace reportesApi.Controllers
                 objectResponse.StatusCode = (int)HttpStatusCode.OK;
                 objectResponse.success = true;
                 objectResponse.message = _DetalleEntradaService.InsertDetalleEntrada(req);
-
             }
 
             catch (System.Exception ex)

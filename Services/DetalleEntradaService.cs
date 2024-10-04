@@ -36,6 +36,7 @@ namespace reportesApi.Services
             GetDetalleEntadaModel detalleentrada = new GetDetalleEntadaModel();
 
             List<GetDetalleEntadaModel> lista = new List<GetDetalleEntadaModel>();
+            
             try
             {
                 parametros = new ArrayList();
@@ -68,17 +69,19 @@ namespace reportesApi.Services
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
             string mensaje;
-
             parametros.Add(new SqlParameter { ParameterName = "@IdEntrada", SqlDbType = System.Data.SqlDbType.Int, Value = detalleentrada.IdEntrada });
             parametros.Add(new SqlParameter { ParameterName = "@Insumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = detalleentrada.Insumo});
             parametros.Add(new SqlParameter { ParameterName = "@Cantidad", SqlDbType = System.Data.SqlDbType.Decimal, Value = detalleentrada.Cantidad});
             parametros.Add(new SqlParameter { ParameterName = "@Costo", SqlDbType = System.Data.SqlDbType.Decimal, Value = detalleentrada.Costo});
 
 
+
             try
             {
                 DataSet ds = dac.Fill("sp_insert_detalleentrada", parametros);
                 mensaje = ds.Tables[0].AsEnumerable().Select(dataRow => dataRow["mensaje"].ToString()).ToList()[0];
+                
+
             }
             catch (Exception ex)
             {

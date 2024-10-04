@@ -17,6 +17,7 @@ namespace reportesApi.Models
         public int IdProveedor { get; set; }
         public int IdSucursal{ get; set; }
         public decimal Total {get; set;}
+        public string CostoTotal {get; set;}
        
     }
 
