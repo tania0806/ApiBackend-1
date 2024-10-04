@@ -5,12 +5,13 @@ namespace reportesApi.Models
     {
         public int Id { get; set; }
         public int IdEntrada { get; set; }
+        public int IdInsumo { get; set;}
         public string Insumo { get; set; }
         public string DescripcionInsumo { get; set; }
         public decimal Cantidad {get; set;}
         public decimal SinCargo { get; set; }
         public decimal Costo {get; set;}
-
+ 
         public string Estatus { get; set; }
 
     }
@@ -21,7 +22,6 @@ namespace reportesApi.Models
         public string Insumo{ get; set; }
         public decimal Cantidad {get; set;}
         public decimal Costo {get; set;}
-        public decimal CostoTotal {get; set;}
 
        
     }

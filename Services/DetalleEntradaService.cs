@@ -48,6 +48,7 @@ namespace reportesApi.Services
                     .Select(dataRow => new GetDetalleEntadaModel {
                         Id = int.Parse(dataRow["Id"].ToString()),
                         IdEntrada = int.Parse(dataRow["IdEntrada"].ToString()),
+                        IdInsumo = int.Parse(dataRow["IdInsumo"].ToString()),
                         Insumo = dataRow["Insumo"].ToString(),
                         DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
                         Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
@@ -73,6 +74,7 @@ namespace reportesApi.Services
             parametros.Add(new SqlParameter { ParameterName = "@Insumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = detalleentrada.Insumo});
             parametros.Add(new SqlParameter { ParameterName = "@Cantidad", SqlDbType = System.Data.SqlDbType.Decimal, Value = detalleentrada.Cantidad});
             parametros.Add(new SqlParameter { ParameterName = "@Costo", SqlDbType = System.Data.SqlDbType.Decimal, Value = detalleentrada.Costo});
+            decimal costoTotal = detalleentrada.Cantidad * detalleentrada.Costo;
 
 
 

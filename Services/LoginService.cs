@@ -34,7 +34,6 @@ namespace reportesApi.Services
                     {
                         usuario.Correo = row["Correo"].ToString();
                         usuario.Contraseña = row["Contraseña"].ToString();
-                        usuario.Id = int.Parse(row["Id"].ToString());
                     
                     }
                 }

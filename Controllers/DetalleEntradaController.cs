@@ -48,10 +48,13 @@ namespace reportesApi.Controllers
         {
             var objectResponse = Helper.GetStructResponse();
             try
-            {
+            {   
+                decimal costoTotal = req.Cantidad * req.Costo;
                 objectResponse.StatusCode = (int)HttpStatusCode.OK;
                 objectResponse.success = true;
                 objectResponse.message = _DetalleEntradaService.InsertDetalleEntrada(req);
+                objectResponse.costoTotal = costoTotal;  // Esto es opcional, depende si quieres devolverlo
+
             }
 
             catch (System.Exception ex)
