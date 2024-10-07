@@ -113,7 +113,7 @@ namespace reportesApi.Services
             return mensaje;
         }
 
-      public void DeteleOrdenCompra(int id)
+      public void DeleteOrdenCompra(int id)
         {
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
