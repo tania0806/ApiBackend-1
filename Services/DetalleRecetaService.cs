@@ -49,7 +49,7 @@ namespace reportesApi.Services
                         IdReceta = int.Parse(dataRow["IdReceta"].ToString()),
                         Insumo = dataRow["Insumo"].ToString(),
                         Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
-                        NombreUsuario = dataRow["NombreUsuario"].ToString(),
+
 
                       
                     }).ToList();
