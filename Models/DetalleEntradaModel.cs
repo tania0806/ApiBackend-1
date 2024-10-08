@@ -13,7 +13,7 @@ namespace reportesApi.Models
         public decimal Costo {get; set;}
  
         public string Estatus { get; set; }
-
+        public decimal CostoTotal { get; set;}
     }
 
     public class InsertDetalleEntradaModel 

@@ -55,6 +55,8 @@ namespace reportesApi.Services
                         SinCargo = decimal.Parse(dataRow["SinCargo"].ToString()),
                         Costo = decimal.Parse(dataRow["Costo"].ToString()),
                         Estatus = dataRow["Estatus"].ToString(),
+                        CostoTotal = decimal.Parse(dataRow["CostoTotal"].ToString()),
+
                     }).ToList();
                 }
             }

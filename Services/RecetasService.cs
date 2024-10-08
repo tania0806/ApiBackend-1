@@ -33,7 +33,7 @@ namespace reportesApi.Services
         public List<GetRecetasModel> GetRecetas()
         {
             ConexionDataAccess dac = new ConexionDataAccess(connection);
-            GetRecetasModel almacen = new GetRecetasModel();
+            GetRecetasModel recetas = new GetRecetasModel();
 
             List<GetRecetasModel> lista = new List<GetRecetasModel>();
             try
@@ -49,7 +49,7 @@ namespace reportesApi.Services
                         Nombre = dataRow["Nombre"].ToString(),
                         Estatus = int.Parse(dataRow["Estatus"].ToString()),
                         FechaCreacion = dataRow["FechaCreacion"].ToString(),
-                        UsuarioRegista = int.Parse(dataRow["UsuarioRegistra"].ToString()),
+                        UsuarioRegista = int.Parse(dataRow["UsuarioRegista"].ToString()),
                       
                     }).ToList();
                 }
