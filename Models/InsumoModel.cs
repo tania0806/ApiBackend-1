@@ -30,12 +30,12 @@ namespace reportesApi.Models
     {
        
         public int IdInsumo { get; set; }
-        public string Usuario { get; set; }
         public string Insumo{ get; set; }
         public string DescripcionInsumo { get; set; }
         public decimal Costo { get; set; }
         public int UnidadMedida { get; set; }
         public string InsumoUp { get; set; }
+        public int UsuarioRegistra {get; set;}
        
     }
 

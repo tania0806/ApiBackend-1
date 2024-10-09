@@ -23,9 +23,10 @@ namespace reportesApi.Models
     public class UpdateAlmacenModel
     {
         public int IdAlmacen { get; set; }
-        public string Usuario { get; set; }
         public string Nombre{ get; set; }
         public string Direccion {get; set;}
+        public int UsuarioRegistra {get; set;}
+
        
     }
 

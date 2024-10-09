@@ -101,13 +101,13 @@ namespace reportesApi.Services
 
 
             parametros.Add(new SqlParameter { ParameterName = "@IdProveedor", SqlDbType = System.Data.SqlDbType.VarChar, Value = Proveedor.IdProveedor });
-            parametros.Add(new SqlParameter { ParameterName = "@Usuario", SqlDbType = System.Data.SqlDbType.VarChar, Value = Proveedor.Usuario });
             parametros.Add(new SqlParameter { ParameterName = "@Nombre", SqlDbType = System.Data.SqlDbType.VarChar, Value = Proveedor.Nombre});
             parametros.Add(new SqlParameter { ParameterName = "@Direccion", SqlDbType = System.Data.SqlDbType.VarChar, Value = Proveedor.Direccion});
             parametros.Add(new SqlParameter { ParameterName = "@Email", SqlDbType = System.Data.SqlDbType.VarChar, Value = Proveedor.Email});
             parametros.Add(new SqlParameter { ParameterName = "@RFC", SqlDbType = System.Data.SqlDbType.VarChar, Value = Proveedor.RFC});
             parametros.Add(new SqlParameter { ParameterName = "@PlazoPago", SqlDbType = System.Data.SqlDbType.Int, Value = Proveedor.PlazoPago });
             parametros.Add(new SqlParameter { ParameterName = "@PorcentajeRetencion", SqlDbType = System.Data.SqlDbType.Decimal, Value = Proveedor.PorcentajeRetencion });
+            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = Proveedor.UsuarioRegistra });
 
 
             try

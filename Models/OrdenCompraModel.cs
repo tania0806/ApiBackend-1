@@ -30,7 +30,8 @@ namespace reportesApi.Models
         public int IdSucursal{ get; set; }
         public int IdComprador {get; set;}
         public decimal Total { get; set;}
-       
+        public int UsuarioRegistra {get; set;}
+
     }
 
 }

@@ -100,6 +100,7 @@ namespace reportesApi.Services
             parametros.Add(new SqlParameter { ParameterName = "@IdSucursal", SqlDbType = System.Data.SqlDbType.VarChar, Value = ordencompra.IdSucursal});
             parametros.Add(new SqlParameter { ParameterName = "@IdComprador", SqlDbType = System.Data.SqlDbType.Decimal, Value = ordencompra.IdComprador});
             parametros.Add(new SqlParameter { ParameterName = "@Total", SqlDbType = System.Data.SqlDbType.Decimal, Value = ordencompra.Total});
+            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = ordencompra.UsuarioRegistra });
 
 
             try

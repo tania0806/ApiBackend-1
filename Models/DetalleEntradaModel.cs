@@ -37,13 +37,10 @@ namespace reportesApi.Models
         public decimal Cantidad {get; set;}
         public decimal SinCargo {get; set;}
         public decimal Costo {get; set;}
+        public int UsuarioRegistra {get; set;}
 
        
     }
 
-    public class DeleteDetalleEntradaModel
-        {
-            public int Id { get; set; }
-        
-        }
+  
 }

@@ -28,12 +28,9 @@ namespace reportesApi.Models
         public int IdProveedor { get; set; }
         public int IdSucursal{ get; set; }
         public decimal Total {get; set;}
+        public int UsuarioRegistra {get; set;}
        
     }
 
-    public class DeleteEntradaModel
-        {
-            public int Id { get; set; }
-        
-        }
+    
 }

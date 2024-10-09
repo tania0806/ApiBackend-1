@@ -38,6 +38,7 @@ namespace reportesApi.Models
         public decimal CantidadRecibida { get; set; }
         public decimal Costo { get; set; }
         public decimal CostoRenglon { get; set; }
+        public int UsuarioRegistra {get; set;}
     }
 
 }
