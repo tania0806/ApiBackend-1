@@ -52,6 +52,7 @@ namespace reportesApi.Services
                         IdComprador = int.Parse(dataRow["IdComprador"].ToString()),
                         Fecha = dataRow["Fecha"].ToString(),
                         Total = decimal.Parse(dataRow["Total"].ToString()),
+                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
 
                     }).ToList();
                 }
@@ -73,6 +74,7 @@ namespace reportesApi.Services
             parametros.Add(new SqlParameter { ParameterName = "@IdSucursal", SqlDbType = System.Data.SqlDbType.Int, Value = ordencompra.IdSucursal});
             parametros.Add(new SqlParameter { ParameterName = "@IdComprador", SqlDbType = System.Data.SqlDbType.Int, Value = ordencompra.IdComprador});
             parametros.Add(new SqlParameter { ParameterName = "@Total", SqlDbType = System.Data.SqlDbType.Decimal, Value = ordencompra.Total});
+            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = ordencompra.UsuarioRegistra });
 
             try
             {

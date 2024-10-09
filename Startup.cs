@@ -68,7 +68,6 @@ namespace reportesApi
             services.AddSingleton<DetalleOrdenCompraService>();
             services.AddSingleton<EntradaService>();
             services.AddSingleton<DetalleEntradaService>();
-            services.AddSingleton<RegistroUsuarioService>();
             services.AddSingleton<ProveedorService>();
             services.AddSingleton<InsumoService>();
             services.AddSingleton<AlmacenService>();

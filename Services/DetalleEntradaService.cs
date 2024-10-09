@@ -56,6 +56,8 @@ namespace reportesApi.Services
                         Costo = decimal.Parse(dataRow["Costo"].ToString()),
                         Estatus = dataRow["Estatus"].ToString(),
                         CostoTotal = decimal.Parse(dataRow["CostoTotal"].ToString()),
+                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
+
 
 
                     }).ToList();
@@ -77,6 +79,7 @@ namespace reportesApi.Services
             parametros.Add(new SqlParameter { ParameterName = "@Insumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = detalleentrada.Insumo});
             parametros.Add(new SqlParameter { ParameterName = "@Cantidad", SqlDbType = System.Data.SqlDbType.Decimal, Value = detalleentrada.Cantidad});
             parametros.Add(new SqlParameter { ParameterName = "@Costo", SqlDbType = System.Data.SqlDbType.Decimal, Value = detalleentrada.Costo});
+            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = detalleentrada.UsuarioRegistra });
 
 
 

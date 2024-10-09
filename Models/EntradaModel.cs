@@ -9,6 +9,7 @@ namespace reportesApi.Models
         public decimal Total {get; set;}
         public string Estatus { get; set; }
         public string FechaEntrada { get; set; }
+        public string UsuarioRegistra { get; set; }
 
     }
 
@@ -17,6 +18,7 @@ namespace reportesApi.Models
         public int IdProveedor { get; set; }
         public int IdSucursal{ get; set; }
         public decimal Total {get; set;}
+        public int UsuarioRegistra {get; set;}
        
     }
 

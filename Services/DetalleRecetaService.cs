@@ -49,6 +49,8 @@ namespace reportesApi.Services
                         IdReceta = int.Parse(dataRow["IdReceta"].ToString()),
                         Insumo = dataRow["Insumo"].ToString(),
                         Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
+                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
+
 
 
                       
@@ -71,6 +73,7 @@ namespace reportesApi.Services
             parametros.Add(new SqlParameter { ParameterName = "@IdReceta", SqlDbType = System.Data.SqlDbType.Int, Value = detallereceta.IdReceta });
             parametros.Add(new SqlParameter { ParameterName = "@Insumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = detallereceta.Insumo});
             parametros.Add(new SqlParameter { ParameterName = "@Cantidad", SqlDbType = System.Data.SqlDbType.Decimal, Value = detallereceta.Cantidad});
+            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = detallereceta.UsuarioRegistra });
 
 
             try

@@ -10,6 +10,7 @@ namespace reportesApi.Models
         public int IdComprador { get; set; }
         public string Fecha { get; set; }
         public decimal Total { get; set;}
+        public string UsuarioRegistra { get; set; }
     }
 
     public class InsertOrdenCompraModel 
@@ -18,6 +19,7 @@ namespace reportesApi.Models
         public int IdSucursal { get; set; }
         public int IdComprador {get; set;}
         public decimal Total { get; set; }
+        public int UsuarioRegistra {get; set;}
 
     }
 

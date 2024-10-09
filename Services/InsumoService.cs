@@ -46,14 +46,15 @@ namespace reportesApi.Services
                   lista = ds.Tables[0].AsEnumerable()
                     .Select(dataRow => new GetInsumoModel {
                         IdInsumo = int.Parse(dataRow["IdInsumo"].ToString()),
-                        Usuario = dataRow["Usuario"].ToString(),
                         Insumo = dataRow["Insumo"].ToString(),
                         DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
                         Costo = decimal.Parse(dataRow["Costo"].ToString()),
                         UnidadMedida = int.Parse(dataRow["UnidadMedida"].ToString()),
                         InsumoUp = dataRow["InsumoUp"].ToString(),
                         Estatus = dataRow["Estatus"].ToString(),
-                        FechaRegistro= dataRow["FechaRegistro"].ToString()
+                        FechaRegistro= dataRow["FechaRegistro"].ToString(),
+                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
+
                     }).ToList();
                 }
             }
@@ -70,12 +71,12 @@ namespace reportesApi.Services
             parametros = new ArrayList();
             string mensaje;
 
-            parametros.Add(new SqlParameter { ParameterName = "@Usuario", SqlDbType = System.Data.SqlDbType.VarChar, Value = Insumo.Usuario });
             parametros.Add(new SqlParameter { ParameterName = "@Insumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = Insumo.Insumo});
             parametros.Add(new SqlParameter { ParameterName = "@DescripcionInsumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = Insumo.DescripcionInsumo});
             parametros.Add(new SqlParameter { ParameterName = "@Costo", SqlDbType = System.Data.SqlDbType.Decimal, Value = Insumo.Costo});
             parametros.Add(new SqlParameter { ParameterName = "@UnidadMedida", SqlDbType = System.Data.SqlDbType.Int, Value = Insumo.UnidadMedida});
             parametros.Add(new SqlParameter { ParameterName = "@InsumoUp", SqlDbType = System.Data.SqlDbType.VarChar, Value = Insumo.InsumoUp});
+            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = Insumo.UsuarioRegistra });
 
             try
             {

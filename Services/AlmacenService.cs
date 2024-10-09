@@ -46,11 +46,12 @@ namespace reportesApi.Services
                   lista = ds.Tables[0].AsEnumerable()
                     .Select(dataRow => new GetAlmacenModel {
                         IdAlmacen = int.Parse(dataRow["IdAlmacen"].ToString()),
-                        Usuario = dataRow["Usuario"].ToString(),
                         Nombre = dataRow["Nombre"].ToString(),
                         Direccion = dataRow["Direccion"].ToString(),
                         Estatus = dataRow["Estatus"].ToString(),
-                        FechaRegistro= dataRow["FechaRegistro"].ToString()
+                        FechaRegistro = dataRow["FechaRegistro"].ToString(),
+                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
+
                     }).ToList();
                 }
             }
@@ -67,9 +68,9 @@ namespace reportesApi.Services
             parametros = new ArrayList();
             string mensaje;
 
-            parametros.Add(new SqlParameter { ParameterName = "@Usuario", SqlDbType = System.Data.SqlDbType.VarChar, Value = Almacen.Usuario });
             parametros.Add(new SqlParameter { ParameterName = "@Nombre", SqlDbType = System.Data.SqlDbType.VarChar, Value = Almacen.Nombre});
             parametros.Add(new SqlParameter { ParameterName = "@Direccion", SqlDbType = System.Data.SqlDbType.VarChar, Value = Almacen.Direccion});
+            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = Almacen.UsuarioRegistra });
 
             try
             {

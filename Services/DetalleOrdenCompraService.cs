@@ -52,6 +52,8 @@ namespace reportesApi.Services
                         CantidadRecibida = decimal.Parse(dataRow["CantidadRecibida"].ToString()),
                         Costo = decimal.Parse(dataRow["Costo"].ToString()),
                         CostoRenglon = decimal.Parse(dataRow["CostoRenglon"].ToString()),
+                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
+
 
                     }).ToList();
                 }
@@ -75,6 +77,7 @@ namespace reportesApi.Services
             parametros.Add(new SqlParameter { ParameterName = "@CantidadRecibida", SqlDbType = System.Data.SqlDbType.Decimal, Value = detalleordencompra.CantidadRecibida});
             parametros.Add(new SqlParameter { ParameterName = "@Costo", SqlDbType = System.Data.SqlDbType.Decimal, Value = detalleordencompra.Costo});
             parametros.Add(new SqlParameter { ParameterName = "@CostoRenglon", SqlDbType = System.Data.SqlDbType.Decimal, Value = detalleordencompra.CostoRenglon});
+            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = detalleordencompra.UsuarioRegistra });
 
             try
             {

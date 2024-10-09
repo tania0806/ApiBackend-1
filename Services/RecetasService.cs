@@ -49,7 +49,7 @@ namespace reportesApi.Services
                         Nombre = dataRow["Nombre"].ToString(),
                         Estatus = int.Parse(dataRow["Estatus"].ToString()),
                         FechaCreacion = dataRow["FechaCreacion"].ToString(),
-                        UsuarioRegista = int.Parse(dataRow["UsuarioRegista"].ToString()),
+                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
                       
                     }).ToList();
                 }
@@ -69,7 +69,7 @@ namespace reportesApi.Services
 
             parametros.Add(new SqlParameter { ParameterName = "@Nombre", SqlDbType = System.Data.SqlDbType.VarChar, Value = receta.Nombre });
             parametros.Add(new SqlParameter { ParameterName = "@Estatus", SqlDbType = System.Data.SqlDbType.Int, Value = receta.Estatus});
-            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = receta.UsuarioRegista});
+            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = receta.UsuarioRegistra });
 
 
             try

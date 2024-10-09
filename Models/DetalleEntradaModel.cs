@@ -14,6 +14,8 @@ namespace reportesApi.Models
  
         public string Estatus { get; set; }
         public decimal CostoTotal { get; set;}
+        public string UsuarioRegistra { get; set; }
+
     }
 
     public class InsertDetalleEntradaModel 
@@ -22,6 +24,7 @@ namespace reportesApi.Models
         public string Insumo{ get; set; }
         public decimal Cantidad {get; set;}
         public decimal Costo {get; set;}
+        public int UsuarioRegistra {get; set;}
 
        
     }
