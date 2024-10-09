@@ -8,6 +8,8 @@ namespace reportesApi.Models
         public int IdReceta { get; set; }
         public string Insumo{ get; set; }
         public decimal Cantidad {get; set;}
+
+
        
     }
 
