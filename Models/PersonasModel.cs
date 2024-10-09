@@ -20,10 +20,7 @@ namespace reportesApi.Models
         public string ApPaterno { get; set; }
         public string ApMaterno { get; set; }
         public string Direccion { get; set; }
-        public string IdPersona { get; set; }
-                public string pwd { get; set; }
-
-
+        public string pwd { get; set; }
         public string UsuarioRegistra { get; set; }
     }
       public class InsertUsuariosModel 
