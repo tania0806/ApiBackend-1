@@ -65,27 +65,43 @@ namespace reportesApi.Controllers
             return new JsonResult(objectResponse);
         }
 
-[HttpGet("GetDetalleEntrada")] 
-public IActionResult GetDetalleEntrada([FromRoute] int id)
-{
-    var objectResponse = Helper.GetStructResponse();
-    try
-    {
-        var detalles = _DetalleEntradaService.GetDetalleEntrada(id);
-        
-        objectResponse.StatusCode = (int)HttpStatusCode.OK;
-        objectResponse.success = true;
-        objectResponse.message = "Datos cargados con éxito";
-        objectResponse.data = detalles; // Asigna los datos a la respuesta
+        [HttpGet("GetDetalleEntrada")]
+        public IActionResult GetDetalleEntrada([FromRoute] int id)
+        {
+            var objectResponse = Helper.GetStructResponse();
 
-    }
-    catch (System.Exception ex)
-    {
-        objectResponse.message = ex.Message;
-    }
+            try
+            {
+                if (id <= 0)
+                {
+                    objectResponse.message = "El IdEntrada proporcionado no es válido.";
+                    return new JsonResult(objectResponse);
+                }
 
-    return new JsonResult(objectResponse);
-}
+                // Obtener detalles desde el servicio
+                var detalles = _DetalleEntradaService.GetDetalleEntrada(id);
+
+                if (detalles == null || detalles.Count == 0)
+                {
+                    objectResponse.message = "No se encontraron detalles para el IdEntrada proporcionado.";
+                    objectResponse.success = false;
+                    objectResponse.StatusCode = (int)HttpStatusCode.NotFound;
+                }
+                else
+                {
+                    objectResponse.StatusCode = (int)HttpStatusCode.OK;
+                    objectResponse.success = true;
+                    objectResponse.message = "Datos cargados con éxito";
+                    objectResponse.data = detalles; // Asignar los detalles obtenidos
+                }
+            }
+            catch (System.Exception ex)
+            {
+                objectResponse.message = ex.Message;
+            }
+
+            return new JsonResult(objectResponse);
+        }
 
 
         [HttpPut("UpdateDetalleEntrada")]
