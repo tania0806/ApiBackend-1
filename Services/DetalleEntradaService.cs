@@ -30,45 +30,39 @@ namespace reportesApi.Services
              
         }
 
-        public List<GetDetalleEntadaModel> GetDetalleEntrada()
+public List<GetDetalleEntadaModel> GetDetalleEntrada(int id) 
+{
+    ConexionDataAccess dac = new ConexionDataAccess(connection);
+    parametros = new ArrayList();
+    parametros.Add(new SqlParameter { ParameterName = "@IdEntrada", SqlDbType = SqlDbType.Int, Value = id });
+    
+    List<GetDetalleEntadaModel> detalles = new List<GetDetalleEntadaModel>();
+
+    try
+    {
+        DataSet ds = dac.Fill("sp_get_detalleentrada", parametros);
+
+        if (ds.Tables.Count > 0)
         {
-            ConexionDataAccess dac = new ConexionDataAccess(connection);
-            GetDetalleEntadaModel detalleentrada = new GetDetalleEntadaModel();
-
-            List<GetDetalleEntadaModel> lista = new List<GetDetalleEntadaModel>();
-            
-            try
+            detalles = ds.Tables[0].AsEnumerable().Select(dataRow => new GetDetalleEntadaModel
             {
-                parametros = new ArrayList();
-                DataSet ds = dac.Fill("sp_get_detalleentrada", parametros);
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-
-                  lista = ds.Tables[0].AsEnumerable()
-                    .Select(dataRow => new GetDetalleEntadaModel {
-                        Id = int.Parse(dataRow["Id"].ToString()),
-                        IdEntrada = int.Parse(dataRow["IdEntrada"].ToString()),
-                        IdInsumo = int.Parse(dataRow["IdInsumo"].ToString()),
-                        Insumo = dataRow["Insumo"].ToString(),
-                        DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
-                        Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
-                        SinCargo = decimal.Parse(dataRow["SinCargo"].ToString()),
-                        Costo = decimal.Parse(dataRow["Costo"].ToString()),
-                        Estatus = dataRow["Estatus"].ToString(),
-                        CostoTotal = decimal.Parse(dataRow["CostoTotal"].ToString()),
-                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
-
-
-
-                    }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return lista;
+                Id = dataRow.Field<int>("Id"),
+                IdEntrada = dataRow.Field<int>("IdEntrada"),
+                Insumo = dataRow.Field<string>("Insumo"),
+                Cantidad = dataRow.Field<int>("Cantidad"),
+                Costo = dataRow.Field<decimal>("Costo"),
+                Estatus = dataRow.Field<int>("Estatus"),
+                UsuarioRegistra = dataRow.Field<string>("UsuarioRegistra")
+            }).ToList();
         }
+    }
+    catch (Exception ex)
+    {
+        throw ex; // Aquí puedes agregar un manejo más específico de errores
+    }
+    return detalles; // Cambiado para devolver la lista de detalles
+}
+
 
         public string InsertDetalleEntrada(InsertDetalleEntradaModel detalleentrada)
         {

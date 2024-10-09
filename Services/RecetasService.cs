@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
+using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
 namespace reportesApi.Services
 {
     public class RecetasService
@@ -65,23 +66,23 @@ namespace reportesApi.Services
         {
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
-            string mensaje;
-
+            int idInsertado ;
             parametros.Add(new SqlParameter { ParameterName = "@Nombre", SqlDbType = System.Data.SqlDbType.VarChar, Value = receta.Nombre });
             parametros.Add(new SqlParameter { ParameterName = "@Estatus", SqlDbType = System.Data.SqlDbType.Int, Value = receta.Estatus});
             parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = receta.UsuarioRegistra });
 
 
             try
-            {
-                DataSet ds = dac.Fill("sp_insert_recetas", parametros);
-                mensaje = ds.Tables[0].AsEnumerable().Select(dataRow => dataRow["mensaje"].ToString()).ToList()[0];
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return mensaje;
+                {
+                    DataSet ds = dac.Fill("sp_insert_recetas", parametros);
+                    idInsertado = ds.Tables[0].AsEnumerable().Select(dataRow => Convert.ToInt32(dataRow["IdInsertado"])).ToList()[0];
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                
+                return idInsertado.ToString();
         }
 
         public string UpdateRecetas(UpdateRecetasModel recetas)

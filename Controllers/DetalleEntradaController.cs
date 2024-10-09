@@ -13,6 +13,8 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Microsoft.AspNetCore.Hosting;
 using reportesApi.Models.Compras;
+using System.Data; // Agrega esta línea
+
 
 namespace reportesApi.Controllers
 {
@@ -63,31 +65,28 @@ namespace reportesApi.Controllers
             return new JsonResult(objectResponse);
         }
 
-        [HttpGet("GetDetalleEntrada")]
-        public IActionResult GetDetalleEntrada()
-        {
-            var objectResponse = Helper.GetStructResponse();
-            var resultado = _DetalleEntradaService.GetDetalleEntrada();
+[HttpGet("GetDetalleEntrada")] 
+public IActionResult GetDetalleEntrada([FromRoute] int id)
+{
+    var objectResponse = Helper.GetStructResponse();
+    try
+    {
+        var detalles = _DetalleEntradaService.GetDetalleEntrada(id);
+        
+        objectResponse.StatusCode = (int)HttpStatusCode.OK;
+        objectResponse.success = true;
+        objectResponse.message = "Datos cargados con éxito";
+        objectResponse.data = detalles; // Asigna los datos a la respuesta
 
-            try
-            {
-                objectResponse.StatusCode = (int)HttpStatusCode.OK;
-                objectResponse.success = true;
-                objectResponse.message = "data cargado con exito";
+    }
+    catch (System.Exception ex)
+    {
+        objectResponse.message = ex.Message;
+    }
 
+    return new JsonResult(objectResponse);
+}
 
-                // Llamando a la función y recibiendo los dos valores.
-                
-                 objectResponse.response = resultado;
-            }
-
-            catch (System.Exception ex)
-            {
-                objectResponse.message = ex.Message;
-            }
-
-            return new JsonResult(objectResponse);
-        }
 
         [HttpPut("UpdateDetalleEntrada")]
         public IActionResult UpdateDetalleEntrada([FromBody] UpdateDetalleEntradaModel req )
