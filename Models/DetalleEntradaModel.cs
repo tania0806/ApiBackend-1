@@ -1,20 +1,20 @@
 using System;
 namespace reportesApi.Models
 {
-    public class GetDetalleEntadaModel
+    public class GetDetalleEntradaModel
     {
-        public int Id { get; set; }
-        public int IdEntrada { get; set; }
-        public int IdInsumo { get; set;}
-        public string Insumo { get; set; }
+
+    public int Id { get; set; }
+    public int IdEntrada { get; set; }
+    public string Insumo { get; set; }
         public string DescripcionInsumo { get; set; }
-        public decimal Cantidad {get; set;}
-        public decimal SinCargo { get; set; }
-        public decimal Costo {get; set;}
- 
-        public string Estatus { get; set; }
-        public decimal CostoTotal { get; set;}
-        public string UsuarioRegistra { get; set; }
+
+
+    public int Cantidad { get; set; }
+    public decimal Costo { get; set; }
+    public int Estatus { get; set; }
+    public string UsuarioRegistra { get; set; }
+
 
     }
 

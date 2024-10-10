@@ -30,48 +30,49 @@ namespace reportesApi.Services
              
         }
 
-        public List<GetDetalleEntadaModel> GetDetalleEntrada()
+        public List<GetDetalleEntradaModel> GetDetalleEntrada(int IdEntrada)
         {
-            ConexionDataAccess dac = new ConexionDataAccess(connection);
-            GetDetalleEntadaModel detalleentrada = new GetDetalleEntadaModel();
 
-            List<GetDetalleEntadaModel> lista = new List<GetDetalleEntadaModel>();
-            
+            ConexionDataAccess dac = new ConexionDataAccess(connection);
+            parametros = new ArrayList();
+            parametros.Add(new SqlParameter { ParameterName = "@IdEntrada", SqlDbType = SqlDbType.Int, Value = IdEntrada });
+
+            List<GetDetalleEntradaModel> lista = new List<GetDetalleEntradaModel>();
             try
             {
-                parametros = new ArrayList();
-                DataSet ds = dac.Fill("sp_get_detalleentrada", parametros);
+                DataSet ds = dac.Fill("sp_get_detalleEntrada", parametros);
                 if (ds.Tables[0].Rows.Count > 0)
                 {
 
                   lista = ds.Tables[0].AsEnumerable()
-                    .Select(dataRow => new GetDetalleEntadaModel {
+                    .Select(dataRow => new GetDetalleEntradaModel {
                         Id = int.Parse(dataRow["Id"].ToString()),
                         IdEntrada = int.Parse(dataRow["IdEntrada"].ToString()),
-                        IdInsumo = int.Parse(dataRow["IdInsumo"].ToString()),
                         Insumo = dataRow["Insumo"].ToString(),
                         DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
-                        Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
-                        SinCargo = decimal.Parse(dataRow["SinCargo"].ToString()),
+                        Cantidad = int.Parse(dataRow["Cantidad"].ToString()),
                         Costo = decimal.Parse(dataRow["Costo"].ToString()),
-                        Estatus = dataRow["Estatus"].ToString(),
-                        CostoTotal = decimal.Parse(dataRow["CostoTotal"].ToString()),
+                        Estatus = int.Parse(dataRow["Estatus"].ToString()),
                         UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
-
-
-
                     }).ToList();
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw ex;
             }
             return lista;
         }
 
+
+
+
+
         public string InsertDetalleEntrada(InsertDetalleEntradaModel detalleentrada)
         {
+            int IdDetalleEntrada;
+
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
             string mensaje;
@@ -83,18 +84,17 @@ namespace reportesApi.Services
 
 
 
-            try
+         try 
             {
                 DataSet ds = dac.Fill("sp_insert_detalleentrada", parametros);
-                mensaje = ds.Tables[0].AsEnumerable().Select(dataRow => dataRow["mensaje"].ToString()).ToList()[0];
-                
-
+                IdDetalleEntrada = ds.Tables[0].AsEnumerable().Select(dataRow=>int.Parse(dataRow["IdDetalleEntrada"].ToString())).ToList()[0];
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw ex;
             }
-            return mensaje;
+            return IdDetalleEntrada.ToString();
         }
 
         public string UpdateDetalleEntrada(UpdateDetalleEntradaModel detalleentrada)

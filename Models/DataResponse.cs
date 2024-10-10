@@ -9,7 +9,11 @@ namespace reportesApi.Models
        // public ErrorResponse error { get; set; }
         public object response { get; set; }
         public object data { get; set; } 
-        public object costoTotal {get; set;}
+
+
+               
+
+
 
     }
 

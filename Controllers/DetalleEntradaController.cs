@@ -13,6 +13,8 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Microsoft.AspNetCore.Hosting;
 using reportesApi.Models.Compras;
+using System.Data; // Agrega esta línea
+
 
 namespace reportesApi.Controllers
 {
@@ -63,31 +65,35 @@ namespace reportesApi.Controllers
             return new JsonResult(objectResponse);
         }
 
-        [HttpGet("GetDetalleEntrada")]
-        public IActionResult GetDetalleEntrada()
+        [HttpGet("GetDetalleEntradas")]
+        public IActionResult GetDetalleEntrada([FromQuery] int IdEntrada)
         {
             var objectResponse = Helper.GetStructResponse();
-            var resultado = _DetalleEntradaService.GetDetalleEntrada();
 
             try
             {
                 objectResponse.StatusCode = (int)HttpStatusCode.OK;
                 objectResponse.success = true;
-                objectResponse.message = "data cargado con exito";
-
+                objectResponse.message = "DetalleEntradas cargados con exito";
+                var resultado = _DetalleEntradaService.GetDetalleEntrada(IdEntrada);
+               
+               
 
                 // Llamando a la función y recibiendo los dos valores.
-                
+               
                  objectResponse.response = resultado;
             }
 
             catch (System.Exception ex)
             {
+                objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
+                objectResponse.success = false;
                 objectResponse.message = ex.Message;
             }
 
             return new JsonResult(objectResponse);
         }
+
 
         [HttpPut("UpdateDetalleEntrada")]
         public IActionResult UpdateDetalleEntrada([FromBody] UpdateDetalleEntradaModel req )

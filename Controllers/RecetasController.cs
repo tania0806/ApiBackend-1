@@ -43,8 +43,8 @@ namespace reportesApi.Controllers
         }
 
 
-        [HttpPost("Insert Receta")]
-        public IActionResult InsertRecetas([FromBody] InsertRecetasModel req )
+        [HttpPost("InsertReceta")]
+         public IActionResult InsertReceta([FromBody] InsertRecetasModel req )
         {
             var objectResponse = Helper.GetStructResponse();
             try
@@ -63,7 +63,7 @@ namespace reportesApi.Controllers
             return new JsonResult(objectResponse);
         }
 
-        [HttpGet("Get Recetas")]
+        [HttpGet("GetRecetas")]
         public IActionResult GetRecetas()
         {
             var objectResponse = Helper.GetStructResponse();
@@ -89,7 +89,7 @@ namespace reportesApi.Controllers
             return new JsonResult(objectResponse);
         }
 
-        [HttpPut("Update Recetas")]
+        [HttpPut("UpdateRecetas")]
         public IActionResult UpdateRecetas([FromBody] UpdateRecetasModel req )
         {
             var objectResponse = Helper.GetStructResponse();
