@@ -30,49 +30,42 @@ namespace reportesApi.Services
              
         }
 
-        public List<GetDetalleEntadaModel> GetDetalleEntrada(int id)
+        public List<GetDetalleEntradaModel> GetDetalleEntrada(int IdEntrada)
         {
-            // Preparar la conexión
+
             ConexionDataAccess dac = new ConexionDataAccess(connection);
-            ArrayList parametros = new ArrayList();
-            parametros.Add(new SqlParameter { ParameterName = "@IdEntrada", SqlDbType = SqlDbType.Int, Value = id });
+            parametros = new ArrayList();
+            parametros.Add(new SqlParameter { ParameterName = "@IdEntrada", SqlDbType = SqlDbType.Int, Value = IdEntrada });
 
-            // Lista para almacenar los detalles obtenidos
-            List<GetDetalleEntadaModel> detalles = new List<GetDetalleEntadaModel>();
-
+            List<GetDetalleEntradaModel> lista = new List<GetDetalleEntradaModel>();
             try
             {
-                // Llenar el DataSet con el resultado del procedimiento almacenado
-                DataSet ds = dac.Fill("sp_get_detalleentrada", parametros);
-                
-                if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)  // Asegurarse que hay filas en la tabla
+                DataSet ds = dac.Fill("sp_get_detalleEntrada", parametros);
+                if (ds.Tables[0].Rows.Count > 0)
                 {
-                    detalles = ds.Tables[0].AsEnumerable().Select(dataRow => new GetDetalleEntadaModel
-                    {
-                                Id = int.Parse(dataRow["Id"].ToString()),
-                                IdEntrada = int.Parse(dataRow["IdEntrada"].ToString()),
-                                Insumo = dataRow["Insumo"].ToString(),
-                                Cantidad = int.Parse(dataRow["Cantidad"].ToString()),
-                                Costo = decimal.Parse(dataRow["Costo"].ToString()),
-                                Estatus = int.Parse(dataRow["Estatus"].ToString()),
-                                UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
 
-
+                  lista = ds.Tables[0].AsEnumerable()
+                    .Select(dataRow => new GetDetalleEntradaModel {
+                        Id = int.Parse(dataRow["Id"].ToString()),
+                        IdEntrada = int.Parse(dataRow["IdEntrada"].ToString()),
+                        Insumo = dataRow["Insumo"].ToString(),
+                        DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
+                        Cantidad = int.Parse(dataRow["Cantidad"].ToString()),
+                        Costo = decimal.Parse(dataRow["Costo"].ToString()),
+                        Estatus = int.Parse(dataRow["Estatus"].ToString()),
+                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
                     }).ToList();
-                }
-                else
-                {
-                    // Aquí puedes manejar la situación cuando no hay resultados
-                    throw new Exception("No se encontraron detalles para el IdEntrada proporcionado.");
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al obtener los detalles: " + ex.Message);
+                Console.WriteLine(ex.Message);
+                throw ex;
             }
-
-            return detalles;  // Devolver la lista de detalles obtenidos
+            return lista;
         }
+
+
 
 
 

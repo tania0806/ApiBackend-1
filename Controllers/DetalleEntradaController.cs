@@ -65,38 +65,29 @@ namespace reportesApi.Controllers
             return new JsonResult(objectResponse);
         }
 
-        [HttpGet("GetDetalleEntrada")]
-        public IActionResult GetDetalleEntrada([FromRoute] int id)
+        [HttpGet("GetDetalleEntradas")]
+        public IActionResult GetDetalleEntrada([FromQuery] int IdEntrada)
         {
             var objectResponse = Helper.GetStructResponse();
 
             try
             {
-                if (id <= 0)
-                {
-                    objectResponse.message = "El IdEntrada proporcionado no es válido.";
-                    return new JsonResult(objectResponse);
-                }
+                objectResponse.StatusCode = (int)HttpStatusCode.OK;
+                objectResponse.success = true;
+                objectResponse.message = "DetalleEntradas cargados con exito";
+                var resultado = _DetalleEntradaService.GetDetalleEntrada(IdEntrada);
+               
+               
 
-                // Obtener detalles desde el servicio
-                var detalles = _DetalleEntradaService.GetDetalleEntrada(id);
-
-                if (detalles == null || detalles.Count == 0)
-                {
-                    objectResponse.message = "No se encontraron detalles para el IdEntrada proporcionado.";
-                    objectResponse.success = false;
-                    objectResponse.StatusCode = (int)HttpStatusCode.NotFound;
-                }
-                else
-                {
-                    objectResponse.StatusCode = (int)HttpStatusCode.OK;
-                    objectResponse.success = true;
-                    objectResponse.message = "Datos cargados con éxito";
-                    objectResponse.data = detalles; // Asignar los detalles obtenidos
-                }
+                // Llamando a la función y recibiendo los dos valores.
+               
+                 objectResponse.response = resultado;
             }
+
             catch (System.Exception ex)
             {
+                objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
+                objectResponse.success = false;
                 objectResponse.message = ex.Message;
             }
 
