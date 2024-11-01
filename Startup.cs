@@ -75,6 +75,7 @@ namespace reportesApi
             services.AddSingleton<ExtencionesService>();
             services.AddSingleton<TiposMovimientoService>();
             services.AddSingleton<MovimientosService>();
+            services.AddSingleton<RenglonesMovimientoService>();
 
             // services.AddSingleton<GrupoService>();
             // services.AddSingleton<GrupoAlumnoService>();
