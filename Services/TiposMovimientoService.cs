@@ -33,24 +33,24 @@ namespace reportesApi.Services
         public List<GetTiposMovimientoModel> GetTiposMovimiento()
         {
             ConexionDataAccess dac = new ConexionDataAccess(connection);
-            GetAlmacenModel almacen = new GetAlmacenModel();
+            GetTiposMovimientoModel tiposmovimiento = new GetTiposMovimientoModel();
 
-            List<GetAlmacenModel> lista = new List<GetAlmacenModel>();
+            List<GetTiposMovimientoModel> lista = new List<GetTiposMovimientoModel>();
             try
             {
                 parametros = new ArrayList();
-                DataSet ds = dac.Fill("sp_get_almacenes", parametros);
+                DataSet ds = dac.Fill("sp_get_tiposmovimiento", parametros);
                 if (ds.Tables[0].Rows.Count > 0)
                 {
 
                   lista = ds.Tables[0].AsEnumerable()
-                    .Select(dataRow => new GetAlmacenModel {
-                        IdAlmacen = int.Parse(dataRow["IdAlmacen"].ToString()),
+                    .Select(dataRow => new GetTiposMovimientoModel {
+                        Id = int.Parse(dataRow["Id"].ToString()),
                         Nombre = dataRow["Nombre"].ToString(),
-                        Direccion = dataRow["Direccion"].ToString(),
-                        Estatus = dataRow["Estatus"].ToString(),
-                        FechaRegistro = dataRow["FechaRegistro"].ToString(),
-                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
+                        EntradaSalida = int.Parse(dataRow["EntradaSalida"].ToString()),
+                        Estatus = int.Parse(dataRow["Estatus"].ToString()),
+                        Fecha_registro = dataRow["Fecha_registro"].ToString(),
+                        Usuario_registra = dataRow["Usuario_registra"].ToString(),
 
                     }).ToList();
                 }
@@ -62,46 +62,45 @@ namespace reportesApi.Services
             return lista;
         }
 
-        public string InsertAlmacen(InsertAlmacenModel Almacen)
+        public string InsertTiposMovimeinto(InsertTiposMovimientosModel tm)
         {
-            int IdAlmacen;
 
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
             string mensaje;
 
-            parametros.Add(new SqlParameter { ParameterName = "@Nombre", SqlDbType = System.Data.SqlDbType.VarChar, Value = Almacen.Nombre});
-            parametros.Add(new SqlParameter { ParameterName = "@Direccion", SqlDbType = System.Data.SqlDbType.VarChar, Value = Almacen.Direccion});
-            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = Almacen.UsuarioRegistra });
+            parametros.Add(new SqlParameter { ParameterName = "@Nombre", SqlDbType = System.Data.SqlDbType.VarChar, Value = tm.Nombre});
+            parametros.Add(new SqlParameter { ParameterName = "@EntradaSalida", SqlDbType = System.Data.SqlDbType.Int, Value = tm.EntradaSalida});
+            parametros.Add(new SqlParameter { ParameterName = "@Usuario_registra", SqlDbType = System.Data.SqlDbType.Int, Value = tm.Usuario_registra});
 
             try 
             {
-                DataSet ds = dac.Fill("sp_insert_almacenes", parametros);
-                IdAlmacen = ds.Tables[0].AsEnumerable().Select(dataRow=>int.Parse(dataRow["IdAlmacen"].ToString())).ToList()[0];
+                DataSet ds = dac.Fill("sp_insert_tiposmovimiento", parametros);
+                mensaje = ds.Tables[0].AsEnumerable().Select(dataRow => dataRow["mensaje"].ToString()).ToList()[0];
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                
                 throw ex;
             }
-            return IdAlmacen.ToString();
+            return mensaje;
         }
 
-        public string UpdateAlmacen(UpdateAlmacenModel Almacen)
+        public string UpdateTiposMovimiento(UpdateTiposMovimientosModel tm)
         {
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
             string mensaje;
 
 
-            parametros.Add(new SqlParameter { ParameterName = "@IdAlmacen", SqlDbType = System.Data.SqlDbType.VarChar, Value = Almacen.IdAlmacen });
-            parametros.Add(new SqlParameter { ParameterName = "@Nombre", SqlDbType = System.Data.SqlDbType.VarChar, Value = Almacen.Nombre});
-            parametros.Add(new SqlParameter { ParameterName = "@Direccion", SqlDbType = System.Data.SqlDbType.VarChar, Value = Almacen.Direccion});
-            parametros.Add(new SqlParameter { ParameterName = "@UsuarioRegistra", SqlDbType = System.Data.SqlDbType.Int, Value = Almacen.UsuarioRegistra });
+            parametros.Add(new SqlParameter { ParameterName = "@Id", SqlDbType = System.Data.SqlDbType.Int, Value = tm.Id });
+            parametros.Add(new SqlParameter { ParameterName = "@Nombre", SqlDbType = System.Data.SqlDbType.VarChar, Value = tm.Nombre});
+            parametros.Add(new SqlParameter { ParameterName = "@EntradaSalida", SqlDbType = System.Data.SqlDbType.Int, Value = tm.EntradaSalida});
+            parametros.Add(new SqlParameter { ParameterName = "@Usuario_registra", SqlDbType = System.Data.SqlDbType.Int, Value = tm.UsuarioRegistra});
 
             try
             {
-                DataSet ds = dac.Fill("sp_update_almacenes", parametros);
+                DataSet ds = dac.Fill("sp_update_tiposmovimiento", parametros);
                 mensaje = ds.Tables[0].AsEnumerable().Select(dataRow => dataRow["mensaje"].ToString()).ToList()[0];
             }
             catch (Exception ex)
@@ -112,16 +111,16 @@ namespace reportesApi.Services
             return mensaje;
         }
 
-      public void DeleteAlmacen(int id)
+      public void DeleteTiposMovimiento(int id)
         {
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
-            parametros.Add(new SqlParameter { ParameterName = "@IdAlmacen", SqlDbType = SqlDbType.Int, Value = id });
+            parametros.Add(new SqlParameter { ParameterName = "@Id", SqlDbType = SqlDbType.Int, Value = id });
 
 
             try
             {
-                dac.ExecuteNonQuery("sp_delete_almacenes", parametros);
+                dac.ExecuteNonQuery("sp_delete_tiposmovimiento", parametros);
             }
             catch (Exception ex)
             {
