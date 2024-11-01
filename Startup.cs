@@ -72,11 +72,9 @@ namespace reportesApi
             services.AddSingleton<InsumoService>();
             services.AddSingleton<AlmacenService>();
             services.AddSingleton<PersonasService>();
-<<<<<<< HEAD
             services.AddSingleton<ExtencionesService>();
-=======
             services.AddSingleton<TiposMovimientoService>();
->>>>>>> 6b2fa2dc12cf55ca98a8b0c6d1597a44b236a84a
+            services.AddSingleton<MovimientosService>();
 
             // services.AddSingleton<GrupoService>();
             // services.AddSingleton<GrupoAlumnoService>();
