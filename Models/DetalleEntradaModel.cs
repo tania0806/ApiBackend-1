@@ -7,7 +7,7 @@ namespace reportesApi.Models
     public int Id { get; set; }
     public int IdEntrada { get; set; }
     public string Insumo { get; set; }
-        public string DescripcionInsumo { get; set; }
+    public string DescripcionInsumo { get; set; }
 
 
     public int Cantidad { get; set; }
