@@ -30,11 +30,13 @@ namespace reportesApi.Services
              
         }
 
-        public List<GetRenglonesMovimientoModel> GetRenglonesMovimiento()
+        public List<GetRenglonesMovimientoModel> GetRenglonesMovimiento( int IdMovimiento)
         {
 
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
+            parametros.Add(new SqlParameter { ParameterName = "@IdMovimiento", SqlDbType = SqlDbType.Int, Value = IdMovimiento });
+
             
 
             List<GetRenglonesMovimientoModel> lista = new List<GetRenglonesMovimientoModel>();
@@ -73,7 +75,7 @@ namespace reportesApi.Services
         public string InsertRenglonesMovimientos(InsertRenglonesMovimientoModel rm)
         {
             
-
+            int IdMovimiento;
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
             string mensaje;
@@ -88,14 +90,14 @@ namespace reportesApi.Services
          try 
             {
                 DataSet ds = dac.Fill("sp_insert_renglonesmovimiento", parametros);
-                mensaje = ds.Tables[0].AsEnumerable().Select(dataRow => dataRow["mensaje"].ToString()).ToList()[0];
+                IdMovimiento = ds.Tables[0].AsEnumerable().Select(dataRow=>int.Parse(dataRow["IdMovimiento"].ToString())).ToList()[0];
             }
             catch (Exception ex)
             {
-               
+               Console.WriteLine(ex.Message);
                 throw ex;
             }
-            return mensaje;
+            return  IdMovimiento.ToString();
         }
 
         public string UpdateRenglonesMovimiento(UpdateRenglonesMovimientoModel rm)

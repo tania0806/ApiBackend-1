@@ -43,7 +43,7 @@ namespace reportesApi.Controllers
         }
 
 
-        [HttpPost("InsertRnglonesMovimiento")]
+        [HttpPost("InsertRenglonesMovimiento")]
          public IActionResult InsertRenglonesMovimiento([FromBody] InsertRenglonesMovimientoModel req )
         {
             var objectResponse = Helper.GetStructResponse();
@@ -64,16 +64,17 @@ namespace reportesApi.Controllers
         }
 
         [HttpGet("GetRenglonesMovimiento")]
-        public IActionResult GetRenglonesMovimiento()
+        public IActionResult GetRenglonesMovimiento([FromQuery] int IdMovimiento)
         {
             var objectResponse = Helper.GetStructResponse();
-            var resultado = _RenglonesMovimientoService.GetRenglonesMovimiento();
+            
 
             try
             {
                 objectResponse.StatusCode = (int)HttpStatusCode.OK;
                 objectResponse.success = true;
                 objectResponse.message = "data cargado con exito";
+                var resultado = _RenglonesMovimientoService.GetRenglonesMovimiento(IdMovimiento);
 
 
                 // Llamando a la función y recibiendo los dos valores.
@@ -83,6 +84,8 @@ namespace reportesApi.Controllers
 
             catch (System.Exception ex)
             {
+                objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
+                objectResponse.success = false;
                 objectResponse.message = ex.Message;
             }
 
