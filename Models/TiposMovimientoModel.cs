@@ -6,6 +6,7 @@ namespace reportesApi.Models
         public int Id { get; set; }
         public string Nombre { get; set; }
         public int EntradaSalida{ get; set; }
+         public string TipoMovimiento { get; set; }
         public int Estatus {get; set;}
         public string Fecha_registro { get; set; }
         public string Usuario_registra { get; set; }

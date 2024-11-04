@@ -48,6 +48,8 @@ namespace reportesApi.Services
                         Id = int.Parse(dataRow["Id"].ToString()),
                         Nombre = dataRow["Nombre"].ToString(),
                         EntradaSalida = int.Parse(dataRow["EntradaSalida"].ToString()),
+                        TipoMovimiento = int.Parse(dataRow["EntradaSalida"].ToString()) == 1 ? "Entrada" : 
+                                     int.Parse(dataRow["EntradaSalida"].ToString()) == 2 ? "Salida" : "Desconocido",
                         Estatus = int.Parse(dataRow["Estatus"].ToString()),
                         Fecha_registro = dataRow["Fecha_registro"].ToString(),
                         Usuario_registra = dataRow["Usuario_registra"].ToString(),
