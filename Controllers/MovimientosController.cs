@@ -13,6 +13,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using Microsoft.AspNetCore.Hosting;
 using reportesApi.Models.Compras;
+using System.Linq;
 
 namespace reportesApi.Controllers
 {
@@ -64,32 +65,75 @@ namespace reportesApi.Controllers
         }
 
         [HttpGet("GetMovimientos")]
-        public IActionResult GetMovimientos([FromQuery] int IdTipoMovimiento)
+        public IActionResult GetMovimientos([FromQuery] int IdTipoMovimiento, DateTime? startDate = null, DateTime? endDate = null, int? IdAlmacen = null)
         {
             var objectResponse = Helper.GetStructResponse();
-            
 
-            try
-            {
-                objectResponse.StatusCode = (int)HttpStatusCode.OK;
-                objectResponse.success = true;
-                objectResponse.message = "data cargado con exito";
-                var resultado = _MovimientosService.GetMovimientos(IdTipoMovimiento);
+    try
+    {
+        // Obtiene los datos del servicio
+        var resultado = _MovimientosService.GetMovimientos(IdTipoMovimiento);
 
+        // Aplicar filtros de fecha y almacén si se han proporcionado
+        if (startDate.HasValue && endDate.HasValue)
+            resultado = resultado.Where(r => r.Fecha >= startDate && r.Fecha <= endDate).ToList();
 
-                // Llamando a la función y recibiendo los dos valores.
-                
-                 objectResponse.response = resultado;
-            }
+         if (IdAlmacen.HasValue)
+            resultado = resultado.Where(r => r.IdAlmacen.Equals(IdAlmacen.Value)).ToList();
 
-            catch (System.Exception ex)
-            {
-                objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
-                objectResponse.success = false;
-                objectResponse.message = ex.Message;
-            }
-
+        // Verificar si hay datos después de filtrar
+        if (resultado == null || resultado.Count == 0 )
+        {
+            objectResponse.StatusCode = (int)HttpStatusCode.NotFound;
+            objectResponse.success = false;
+            objectResponse.message = "No se encontraron datos para el movimiento solicitado";
             return new JsonResult(objectResponse);
+        }
+
+        // Crear el archivo Excel
+        using (var package = new ExcelPackage())
+        {
+            var worksheet = package.Workbook.Worksheets.Add("Reporte");
+
+            // Agregar encabezados
+            worksheet.Cells[1, 1].Value = "Id";
+            worksheet.Cells[1, 2].Value = "IdTipoMovimiento";
+            worksheet.Cells[1, 3].Value = "TipoMovimiento";
+            worksheet.Cells[1, 4].Value = "IdAlmacen";
+            worksheet.Cells[1, 5].Value = "Fecha";
+            worksheet.Cells[1, 6].Value = "Estatus";
+            worksheet.Cells[1, 7].Value = "Fecha_registro";
+            worksheet.Cells[1, 8].Value = "IdUsuario";
+
+            // Agregar datos a las filas
+            int row = 2;
+            foreach (var item in resultado)
+            {
+                worksheet.Cells[row, 1].Value = item.Id;
+                worksheet.Cells[row, 2].Value = item.IdTiposMovimeinto;
+                worksheet.Cells[row, 3].Value = item.Nombre;
+                worksheet.Cells[row, 4].Value = item.IdAlmacen;
+                worksheet.Cells[row, 5].Value = item.Fecha.ToString("yyyy-MM-dd");
+                worksheet.Cells[row, 6].Value = item.Estatus;
+                worksheet.Cells[row, 7].Value = item.Fecha_registro;
+                worksheet.Cells[row, 8].Value = item.IdUsuario;
+                row++;
+            }
+
+            // Convertir el archivo Excel a un arreglo de bytes
+            var excelData = package.GetAsByteArray();
+
+            // Retorna el archivo como respuesta HTTP en formato Excel
+            return File(excelData, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteMovimientos.xlsx");
+        }
+    }
+    catch (Exception ex)
+    {
+        objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
+        objectResponse.success = false;
+        objectResponse.message = ex.Message;
+        return new JsonResult(objectResponse);
+    }
         }
 
         [HttpPut("UpdateMovimientos")]

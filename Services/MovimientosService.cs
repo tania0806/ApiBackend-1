@@ -45,11 +45,12 @@ namespace reportesApi.Services
                 {
 
                   lista = ds.Tables[0].AsEnumerable()
-                    .Select(dataRow => new GetMovimientosModel {
+                    .Select(static dataRow => new GetMovimientosModel {
                         Id = int.Parse(dataRow["Id"].ToString()),
                         IdTiposMovimeinto = int.Parse(dataRow["IdTipoMovimiento"].ToString()),
+                        Nombre = dataRow["TipoMovimiento"].ToString(),
                         IdAlmacen = int.Parse(dataRow["IdAlmacen"].ToString()),
-                        Fecha = dataRow["Fecha"].ToString(),
+                        Fecha = (DateTime)(DateTime.TryParse(dataRow["Fecha"].ToString(), out DateTime fecha) ? (DateTime?)fecha : null),
                         Estatus = int.Parse(dataRow["Estatus"].ToString()),
                         Fecha_registro = dataRow["Fecha_registro"].ToString(),
                         IdUsuario = int.Parse(dataRow["IdUsuario"].ToString()),
@@ -84,7 +85,7 @@ namespace reportesApi.Services
          try 
             {
                 DataSet ds = dac.Fill("sp_insert_movimientos", parametros);
-               IdTipoMovimiento = ds.Tables[0].AsEnumerable().Select(dataRow=>int.Parse(dataRow["IdTipoMovimiento"].ToString())).ToList()[0];
+               IdTipoMovimiento = ds.Tables[0].AsEnumerable().Select(static dataRow =>int.Parse(dataRow["IdTipoMovimiento"].ToString())).ToList()[0];
             }
             catch (Exception ex)
             {
@@ -108,7 +109,7 @@ namespace reportesApi.Services
             try
             {
                 DataSet ds = dac.Fill("sp_update_movimientos", parametros);
-                mensaje = ds.Tables[0].AsEnumerable().Select(dataRow => dataRow["mensaje"].ToString()).ToList()[0];
+                mensaje = ds.Tables[0].AsEnumerable().Select(static dataRow => dataRow["mensaje"].ToString()).ToList()[0];
             }
             catch (Exception ex)
             {
