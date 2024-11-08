@@ -30,12 +30,13 @@ namespace reportesApi.Services
              
         }
 
-        public List<GetRenglonesMovimientoModel> GetRenglonesMovimiento( int IdMovimiento)
+        public List<GetRenglonesMovimientoModel> GetRenglonesMovimiento( string Fechainicial, string Fechafinal)
         {
 
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
-            parametros.Add(new SqlParameter { ParameterName = "@IdMovimiento", SqlDbType = SqlDbType.Int, Value = IdMovimiento });
+            parametros.Add(new SqlParameter { ParameterName = "@Fechainicial", SqlDbType = SqlDbType.VarChar, Value = Fechainicial });
+            parametros.Add(new SqlParameter { ParameterName = "@Fechafinal", SqlDbType = SqlDbType.VarChar, Value = Fechafinal });
 
             
 
@@ -67,10 +68,6 @@ namespace reportesApi.Services
             }
             return lista;
         }
-
-
-
-
 
         public string InsertRenglonesMovimientos(InsertRenglonesMovimientoModel rm)
         {

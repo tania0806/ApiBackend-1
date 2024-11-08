@@ -68,29 +68,65 @@ namespace reportesApi.Controllers
         {
             
             var objectResponse = Helper.GetStructResponse();
+    try
+    {
+        // Obteniendo los datos del servicio
+        var data = _RenglonesMovimientoService.GetRenglonesMovimiento(IdMovimiento);
+       
+        // Creando el archivo Excel en memoria
+        using (var package = new ExcelPackage())
+        {
+            var worksheet = package.Workbook.Worksheets.Add("RenglonesMovimiento");
 
-            try
+            // Agrega encabezados
+            worksheet.Cells[1, 1].Value = "Id";
+            worksheet.Cells[1, 2].Value = "IdMovimiento";
+            worksheet.Cells[1, 3].Value = "Insumo";
+            worksheet.Cells[1, 4].Value = "DescripcionInsumo";
+            worksheet.Cells[1, 5].Value = "Cantidad";
+            worksheet.Cells[1, 6].Value = "Costo";
+            worksheet.Cells[1, 7].Value = "Estatus";
+            worksheet.Cells[1, 8].Value = "Fecha_registro";
+            worksheet.Cells[1, 9].Value = "usuario_registra";
+
+            // Aquí iteramos sobre los datos y llenamos el Excel
+            int row = 2;
+            foreach (var item in data)
             {
-                objectResponse.StatusCode = (int)HttpStatusCode.OK;
-                objectResponse.success = true;
-                objectResponse.message = "DetalleReceta cargados exitosamente";
-                var resultado = _RenglonesMovimientoService.GetRenglonesMovimiento(IdMovimiento);
-               
-               
-
-                // Llamando a la función y recibiendo los dos valores.
-               
-                 objectResponse.response = resultado;
+                worksheet.Cells[row, 1].Value = item.Id;
+                worksheet.Cells[row, 2].Value = item.IdMovimiento;       
+                worksheet.Cells[row, 3].Value = item.Insumo;
+                worksheet.Cells[row, 4].Value = item.DescripcionInsumo; 
+                worksheet.Cells[row, 5].Value = item.Cantidad;  
+                worksheet.Cells[row, 6].Value = item.Costo;
+                worksheet.Cells[row, 7].Value = item.Estatus;
+                worksheet.Cells[row, 8].Value = item.Fecha_registro;
+                worksheet.Cells[row, 9].Value = item.Usuario_registra;   
+                row++;
             }
 
-            catch (System.Exception ex)
+            // Configura el estilo del encabezado
+            using (var range = worksheet.Cells[1, 1, 1, 6])
             {
-                objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
-                objectResponse.success = false;
-                objectResponse.message = ex.Message;
+                range.Style.Font.Bold = true;
+                range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
             }
 
-            return new JsonResult(objectResponse);
+            // Guarda el archivo en un arreglo de bytes
+            var excelBytes = package.GetAsByteArray();
+
+            // Retorna el archivo como una descarga
+            return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "RenglonesMovimiento.xlsx");
+        }
+    }
+    catch (Exception ex)
+    {
+        objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
+        objectResponse.success = false;
+        objectResponse.message = ex.Message;
+        return new JsonResult(objectResponse);
+    }
         }
 
         [HttpPut("UpdateRenglonesMovimiento")]

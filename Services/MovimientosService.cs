@@ -50,7 +50,7 @@ namespace reportesApi.Services
                         IdTiposMovimeinto = int.Parse(dataRow["IdTipoMovimiento"].ToString()),
                         Nombre = dataRow["TipoMovimiento"].ToString(),
                         IdAlmacen = int.Parse(dataRow["IdAlmacen"].ToString()),
-                        Fecha = (DateTime)(DateTime.TryParse(dataRow["Fecha"].ToString(), out DateTime fecha) ? (DateTime?)fecha : null),
+                        Fecha = dataRow["Fecha"].ToString(),
                         Estatus = int.Parse(dataRow["Estatus"].ToString()),
                         Fecha_registro = dataRow["Fecha_registro"].ToString(),
                         IdUsuario = int.Parse(dataRow["IdUsuario"].ToString()),

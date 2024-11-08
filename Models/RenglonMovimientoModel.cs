@@ -13,6 +13,8 @@ namespace reportesApi.Models
     public int Estatus { get; set; }
     public string Fecha_registro { get; set; }
     public string Usuario_registra { get; set; }
+    public string Fechainicial {get; set;}
+    public string Fechafinal {get; set;}
 
     }
 
