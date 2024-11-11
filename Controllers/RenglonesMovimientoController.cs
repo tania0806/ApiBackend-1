@@ -64,14 +64,22 @@ namespace reportesApi.Controllers
         }
 
         [HttpGet("GetRenglonesMovimiento")]
-        public IActionResult GetRenglonesMovimiento([FromQuery] int IdMovimiento)
+        public IActionResult GetRenglonesMovimiento( [FromQuery] string? fechainicial = null, 
+    [FromQuery] string? fechafinal = null)
         {
             
             var objectResponse = Helper.GetStructResponse();
     try
     {
+        // Conversión de fechas a DateTime? (opcional)
+        DateTime? fechaInicialParsed = string.IsNullOrWhiteSpace(fechainicial) 
+            ? (DateTime?)null 
+            : DateTime.ParseExact(fechainicial, "yyyy-MM-dd", null);
+        DateTime? fechaFinalParsed = string.IsNullOrWhiteSpace(fechafinal) 
+            ? (DateTime?)null 
+            : DateTime.ParseExact(fechafinal, "yyyy-MM-dd", null);
         // Obteniendo los datos del servicio
-        var data = _RenglonesMovimientoService.GetRenglonesMovimiento(IdMovimiento);
+        var data = _RenglonesMovimientoService.GetRenglonesMovimiento(fechaInicialParsed, fechaFinalParsed);
        
         // Creando el archivo Excel en memoria
         using (var package = new ExcelPackage())

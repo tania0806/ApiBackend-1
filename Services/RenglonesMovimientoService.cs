@@ -30,14 +30,12 @@ namespace reportesApi.Services
              
         }
 
-        public List<GetRenglonesMovimientoModel> GetRenglonesMovimiento( string Fechainicial, string Fechafinal)
+        public List<GetRenglonesMovimientoModel> GetRenglonesMovimiento( )
         {
 
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
-            parametros.Add(new SqlParameter { ParameterName = "@Fechainicial", SqlDbType = SqlDbType.VarChar, Value = Fechainicial });
-            parametros.Add(new SqlParameter { ParameterName = "@Fechafinal", SqlDbType = SqlDbType.VarChar, Value = Fechafinal });
-
+           
             
 
             List<GetRenglonesMovimientoModel> lista = new List<GetRenglonesMovimientoModel>();
