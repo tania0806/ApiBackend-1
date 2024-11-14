@@ -64,20 +64,20 @@ namespace reportesApi.Controllers
         }
 
         [HttpGet("GetRenglonesMovimiento")]
-        public IActionResult GetRenglonesMovimiento( [FromQuery] string? fechainicial = null, 
-    [FromQuery] string? fechafinal = null)
+        public IActionResult GetRenglonesMovimiento( [FromQuery] string? Fechainicial = null, 
+    [FromQuery] string? Fechafinal = null)
         {
             
             var objectResponse = Helper.GetStructResponse();
     try
     {
         // Conversión de fechas a DateTime? (opcional)
-        DateTime? fechaInicialParsed = string.IsNullOrWhiteSpace(fechainicial) 
+        DateTime? fechaInicialParsed = string.IsNullOrWhiteSpace(Fechainicial) 
             ? (DateTime?)null 
-            : DateTime.ParseExact(fechainicial, "yyyy-MM-dd", null);
-        DateTime? fechaFinalParsed = string.IsNullOrWhiteSpace(fechafinal) 
+            : DateTime.ParseExact(Fechainicial, "yyyy-MM-dd", null);
+        DateTime? fechaFinalParsed = string.IsNullOrWhiteSpace(Fechafinal) 
             ? (DateTime?)null 
-            : DateTime.ParseExact(fechafinal, "yyyy-MM-dd", null);
+            : DateTime.ParseExact(Fechafinal, "yyyy-MM-dd", null);
         // Obteniendo los datos del servicio
         var data = _RenglonesMovimientoService.GetRenglonesMovimiento(fechaInicialParsed, fechaFinalParsed);
        
@@ -95,7 +95,8 @@ namespace reportesApi.Controllers
             worksheet.Cells[1, 6].Value = "Costo";
             worksheet.Cells[1, 7].Value = "Estatus";
             worksheet.Cells[1, 8].Value = "Fecha_registro";
-            worksheet.Cells[1, 9].Value = "usuario_registra";
+            worksheet.Cells[1, 9].Value = "Usuario_registra";
+            worksheet.Cells[1, 10].Value = "TotalCosto";
 
             // Aquí iteramos sobre los datos y llenamos el Excel
             int row = 2;
@@ -110,11 +111,12 @@ namespace reportesApi.Controllers
                 worksheet.Cells[row, 7].Value = item.Estatus;
                 worksheet.Cells[row, 8].Value = item.Fecha_registro;
                 worksheet.Cells[row, 9].Value = item.Usuario_registra;   
+                worksheet.Cells[row, 10].Value = item.TotalCosto;  
                 row++;
             }
 
             // Configura el estilo del encabezado
-            using (var range = worksheet.Cells[1, 1, 1, 6])
+            using (var range = worksheet.Cells[1, 1, 1, 10])
             {
                 range.Style.Font.Bold = true;
                 range.Style.Fill.PatternType = ExcelFillStyle.Solid;

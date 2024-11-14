@@ -30,12 +30,22 @@ namespace reportesApi.Services
              
         }
 
-        public List<GetRenglonesMovimientoModel> GetRenglonesMovimiento( )
+        public List<GetRenglonesMovimientoModel> GetRenglonesMovimiento(DateTime? Fechainicial = null, DateTime? Fechafinal = null)
         {
 
             ConexionDataAccess dac = new ConexionDataAccess(connection);
             parametros = new ArrayList();
            
+                // Agregar parámetros de fecha si no son nulos
+            if (Fechainicial.HasValue)
+                parametros.Add(new SqlParameter("@Fechainicial", Fechainicial.Value));
+            else
+                parametros.Add(new SqlParameter("@Fechainicial", DBNull.Value));
+
+            if (Fechafinal.HasValue)
+                parametros.Add(new SqlParameter("@Fechafinal", Fechafinal.Value));
+            else
+                parametros.Add(new SqlParameter("@Fechafinal", DBNull.Value));
             
 
             List<GetRenglonesMovimientoModel> lista = new List<GetRenglonesMovimientoModel>();
@@ -53,6 +63,7 @@ namespace reportesApi.Services
                         DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
                         Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
                         Costo = decimal.Parse(dataRow["Costo"].ToString()),
+                        TotalCosto = dataRow["TotalCosto"].ToString(),
                         Estatus = int.Parse(dataRow["Estatus"].ToString()),
                         Fecha_registro = dataRow["Fecha_registro"].ToString(),
                         Usuario_registra = dataRow["Usuario_registra"].ToString(),
