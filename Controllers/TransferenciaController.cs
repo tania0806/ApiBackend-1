@@ -16,13 +16,13 @@ using reportesApi.Models.Compras;
 
 namespace reportesApi.Controllers
 {
-        [Route("api")]
-    public class TransferenciaController: ControllerBase
+   
+    [Route("api")]
+    public class TransferencisController: ControllerBase
     {
    
-        private readonly TranferenciaService _TranferenciaService;
-        private readonly MovimientoConsultaService _MovimientoConsultaService;
-        private readonly ILogger<TransferenciaController> _logger;
+        private readonly TransferenciaService _TransferenciaService;
+        private readonly ILogger<TransferencisController> _logger;
   
         private readonly IJwtAuthenticationService _authService;
         private readonly IWebHostEnvironment _hostingEnvironment;
@@ -30,45 +30,106 @@ namespace reportesApi.Controllers
 
         Encrypt enc = new Encrypt();
 
-        public TransferenciaController(TranferenciaService TranferenciaService, MovimientoConsultaService MovimientoConsultaService, ILogger<TransferenciaController> logger, IJwtAuthenticationService authService) {
-            _TranferenciaService = TranferenciaService;
-            _MovimientoConsultaService = MovimientoConsultaService;
+        public TransferencisController(TransferenciaService TransferenciaService, ILogger<TransferencisController> logger, IJwtAuthenticationService authService) {
+            _TransferenciaService = TransferenciaService;
             _logger = logger;
        
             _authService = authService;
             // Configura la ruta base donde se almacenan los archivos.
             // Asegúrate de ajustar la ruta según tu estructura de directorios.
-       
+
             
             
         }
-        [HttpPost("RegistrarTransferencia")]
-            public IActionResult RegistrarTransferencia([FromBody] TransferenciaModel transferencia)
+
+
+        [HttpPost("InsertTransferencia")]
+        public IActionResult InsertTransfarencia([FromBody] InsertTransferenciaModel req )
+        {
+            var objectResponse = Helper.GetStructResponse();
+            try
             {
+                objectResponse.StatusCode = (int)HttpStatusCode.OK;
+                objectResponse.success = true;
+                objectResponse.message = _TransferenciaService.InsertTransferencia(req);
+
+            }
+
+            catch (System.Exception ex)
+            {
+                objectResponse.message = ex.Message;
+            }
+
+            return new JsonResult(objectResponse);
+        }
+
+       [HttpGet("GetTransferencia")]
+            public IActionResult GetTransferencia(DateTime FechaInicio, DateTime FechaFinaL, int? IdAlmacen = null)
+            {
+                var objectResponse = Helper.GetStructResponse();
+                
                 try
                 {
-                    var success = _TranferenciaService.RegistrarTransferencia(transferencia);
-                    if (success)
-                        return Ok("Transferencia registrada con éxito.");
-                    else
-                        return BadRequest("Error al registrar la transferencia.");
+                    // Llamar al servicio con los parámetros necesarios.
+                    var resultado = _TransferenciaService.GetTransferencia(FechaInicio, FechaFinaL, IdAlmacen);
+
+                    objectResponse.StatusCode = (int)HttpStatusCode.OK;
+                    objectResponse.success = true;
+                    objectResponse.message = "Datos cargados con éxito.";
+                    objectResponse.response = resultado;
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
-                    return StatusCode(500, ex.Message);
+                    objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    objectResponse.success = false;
+                    objectResponse.message = ex.Message;
                 }
+
+                return new JsonResult(objectResponse);
             }
 
-            [HttpGet("ConsultarMovimientos")]
-            public IActionResult ConsultarMovimientos(int IdAlmacen, DateTime? FechaInicio, DateTime? FechaFin)
+        [HttpPut("UpdateTransferencias")]
+        public IActionResult UpdateTransferencia([FromBody] UpdateTransferenciaModel req )
+        {
+            var objectResponse = Helper.GetStructResponse();
+            try
             {
-                var movimientos = _MovimientoConsultaService.ConsultarMovimientos(IdAlmacen, FechaInicio, FechaFin);
-                return Ok(movimientos);
+                objectResponse.StatusCode = (int)HttpStatusCode.OK;
+                objectResponse.success = true;
+                objectResponse.message = _TransferenciaService.UpdateTransferenciaModel(req);
+
+                ;
+
             }
 
+            catch (System.Exception ex)
+            {
+                objectResponse.message = ex.Message;
+            }
 
-        
+            return new JsonResult(objectResponse);
+        }
 
+        [HttpDelete("DeleteTransferencia/{id}")]
+        public IActionResult DeleteTransferencia([FromRoute] int id )
+        {
+            var objectResponse = Helper.GetStructResponse();
+            try
+            {
+                objectResponse.StatusCode = (int)HttpStatusCode.OK;
+                objectResponse.success = true;
+                objectResponse.message = "data cargado con exito";
+
+                _TransferenciaService.DeleteTransferencias(id);
+
+            }
+
+            catch (System.Exception ex)
+            {
+                objectResponse.message = ex.Message;
+            }
+
+            return new JsonResult(objectResponse);
+        }
     }
-
 }

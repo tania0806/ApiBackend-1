@@ -15,72 +15,153 @@ using System.Linq;
 using System.Text;
 namespace reportesApi.Services
 {
-    public class TranferenciaService
-{
-    private  string connection;
+    public class TransferenciaService
+    {
+        private  string connection;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private ArrayList parametros = new ArrayList();
 
 
-        public TranferenciaService(IMarcatelDatabaseSetting settings, IWebHostEnvironment webHostEnvironment)
+        public TransferenciaService(IMarcatelDatabaseSetting settings, IWebHostEnvironment webHostEnvironment)
         {
              connection = settings.ConnectionString;
 
              _webHostEnvironment = webHostEnvironment;
              
         }
-        private string connectionString;
 
-        public bool RegistrarTransferencia(TransferenciaModel transferencia)
-    {
-        // Conexión a la base de datos
-        using (var connection = new SqlConnection(connectionString))
-        {
-            connection.Open();
+        // public List<GetTransferenciaModel> GetTransferencia()
+        // {
 
-            // Transacción para asegurar que ambas operaciones se ejecuten juntas
-            using (var transaction = connection.BeginTransaction())
+        //     ConexionDataAccess dac = new ConexionDataAccess(connection);
+        //     parametros = new ArrayList();
+        
+       public List<GetTransferenciaModel> GetTransferencia(DateTime FechaInicio, DateTime FechaFinal, int? IdAlmacen = null)
+   {
+                   
             {
+                ConexionDataAccess dac = new ConexionDataAccess(connection);
+                List<GetTransferenciaModel> lista = new List<GetTransferenciaModel>();
+
                 try
                 {
-                    // Registro de salida en almacén de origen
-                    var salidaCmd = new SqlCommand("sp_registrar_movimiento", connection, transaction)
+                    // Definir e inicializar los parámetros
+                    var parametros = new List<SqlParameter>
                     {
-                        CommandType = CommandType.StoredProcedure
+                        new SqlParameter("@FechaInicio", SqlDbType.DateTime) { Value = FechaInicio },
+                        new SqlParameter("@FechaFin", SqlDbType.DateTime) { Value = FechaFinal },
+                        new SqlParameter("@IdAlmacen", SqlDbType.Int) { Value = (object)IdAlmacen ?? DBNull.Value }
                     };
-                    salidaCmd.Parameters.AddWithValue("@IdAlmacen", transferencia.IdAlmacenOrigen);
-                    salidaCmd.Parameters.AddWithValue("@Insumo", transferencia.Insumo);
-                    salidaCmd.Parameters.AddWithValue("@Cantidad", -transferencia.Cantidad); // Cantidad negativa para salida
-                    salidaCmd.Parameters.AddWithValue("@TipoMovimiento", "Salida");
-                    salidaCmd.Parameters.AddWithValue("@FechaMovimiento", transferencia.FechaMovimiento);
-                    salidaCmd.Parameters.AddWithValue("@Usuario_registra", transferencia.UsuarioRegistra);
-                    salidaCmd.ExecuteNonQuery();
 
-                    // Registro de entrada en almacén de destino
-                    var entradaCmd = new SqlCommand("sp_registrar_movimiento", connection, transaction)
+                    // Llamar al procedimiento almacenado con los parámetros
+                    DataSet ds = dac.Fill("sp_get_registrarmovimientos", parametros);
+
+                    if (ds.Tables[0].Rows.Count > 0)
                     {
-                        CommandType = CommandType.StoredProcedure
-                    };
-                    entradaCmd.Parameters.AddWithValue("@IdAlmacen", transferencia.IdAlmacenDestino);
-                    entradaCmd.Parameters.AddWithValue("@Insumo", transferencia.Insumo);
-                    entradaCmd.Parameters.AddWithValue("@Cantidad", transferencia.Cantidad); // Cantidad positiva para entrada
-                    entradaCmd.Parameters.AddWithValue("@TipoMovimiento", "Entrada");
-                    entradaCmd.Parameters.AddWithValue("@FechaMovimiento", transferencia.FechaMovimiento);
-                    entradaCmd.Parameters.AddWithValue("@Usuario_registra", transferencia.UsuarioRegistra);
-                    entradaCmd.ExecuteNonQuery();
-
-                    transaction.Commit();
-                    return true;
+                        lista = ds.Tables[0].AsEnumerable()
+                            .Select(dataRow => new GetTransferenciaModel
+                            {
+                                Id = int.Parse(dataRow["Id"].ToString()),
+                                IdAlmacenOrigen = int.Parse(dataRow["IdAlmacenOrigen"].ToString()),
+                                IdAlmacenDestino = int.Parse(dataRow["IdAlmacenDestino"].ToString()),
+                                Insumo = int.Parse(dataRow["Insumo"].ToString()),
+                                DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
+                                Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
+                                FechaMovimiento = DateTime.Parse(dataRow["FechaMovimiento"].ToString()),
+                                TipoMovimiento = dataRow["TipoMovimiento"].ToString(),
+                                Estatus = int.Parse(dataRow["Estatus"].ToString()),
+                                Fecha_registra = dataRow["Fecha_registro"].ToString(),
+                                Usuario_registra = dataRow["Usuario_registra"].ToString(),
+                            }).ToList();
+                    }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    transaction.Rollback();
-                    throw;
+                    Console.WriteLine(ex.Message);
+                    throw ex;
                 }
+
+                return lista;
+      } 
+ }
+    
+
+        public string InsertTransferencia(InsertTransferenciaModel rm)
+        {
+            
+            
+            ConexionDataAccess dac = new ConexionDataAccess(connection);
+            parametros = new ArrayList();
+            string mensaje;
+            parametros.Add(new SqlParameter { ParameterName = "@IdAlmacenOrigen", SqlDbType = System.Data.SqlDbType.Int, Value = rm.IdAlmacenOrigen});
+            parametros.Add(new SqlParameter { ParameterName = "@IdAlmacenDestino", SqlDbType = System.Data.SqlDbType.Int, Value = rm.IdAlmacenDestino});
+            parametros.Add(new SqlParameter { ParameterName = "@Insumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = rm.Insumo});
+            parametros.Add(new SqlParameter { ParameterName = "@Cantidad", SqlDbType = System.Data.SqlDbType.Decimal, Value = rm.Cantidad});
+            parametros.Add(new SqlParameter { ParameterName = "@TipoMovimiento", SqlDbType = System.Data.SqlDbType.VarChar, Value = rm.TipoMovimiento});
+            parametros.Add(new SqlParameter { ParameterName = "@FechaMovimiento", SqlDbType = System.Data.SqlDbType.DateTime, Value = rm.FechaMovimiento});
+            parametros.Add(new SqlParameter { ParameterName = "@Usuario_registra", SqlDbType = System.Data.SqlDbType.Int, Value = rm.Usuario_registra});
+
+         try 
+            {
+                DataSet ds = dac.Fill("sp_insert_registrarmovimiento", parametros);
+                mensaje = ds.Tables[0].AsEnumerable().Select(dataRow => dataRow["mensaje"].ToString()).ToList()[0];
+                
+            }
+            catch (Exception ex)
+            {
+            
+                throw ex;
+            }
+             return mensaje;
+           
+        }
+
+        public string UpdateTransferenciaModel(UpdateTransferenciaModel rm)
+        {
+            ConexionDataAccess dac = new ConexionDataAccess(connection);
+            parametros = new ArrayList();
+            string mensaje;
+
+
+            parametros.Add(new SqlParameter { ParameterName = "@Id", SqlDbType = System.Data.SqlDbType.Int, Value = rm.Id });
+            parametros.Add(new SqlParameter { ParameterName = "@IdAlmecnDestino", SqlDbType = System.Data.SqlDbType.Int, Value = rm.IdAlmacenDestino});
+            parametros.Add(new SqlParameter { ParameterName = "@Insumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = rm.Insumo});
+            parametros.Add(new SqlParameter { ParameterName = "@Cantidad", SqlDbType = System.Data.SqlDbType.Decimal, Value = rm.Cantidad});
+            parametros.Add(new SqlParameter { ParameterName = "@TipoMovimiento", SqlDbType = System.Data.SqlDbType.VarChar, Value = rm.TipoMovimiento});
+            parametros.Add(new SqlParameter { ParameterName = "@FechaMovimiento", SqlDbType = System.Data.SqlDbType.DateTime, Value = rm.FechaMovimiento});
+            parametros.Add(new SqlParameter { ParameterName = "@Usuario_registra", SqlDbType = System.Data.SqlDbType.Int, Value = rm.Usuario_registra});
+
+
+            try
+            {
+                DataSet ds = dac.Fill("sp_update_regsitrarmovimientos", parametros);
+                mensaje = ds.Tables[0].AsEnumerable().Select(dataRow => dataRow["mensaje"].ToString()).ToList()[0];
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return mensaje;
+        }
+
+      public void DeleteTransferencias(int id)
+        {
+            ConexionDataAccess dac = new ConexionDataAccess(connection);
+            parametros = new ArrayList();
+            parametros.Add(new SqlParameter { ParameterName = "@Id", SqlDbType = SqlDbType.Int, Value = id });
+
+
+            try
+            {
+                dac.ExecuteNonQuery("sp_delete_registrar", parametros);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }
-}
+
 
 }
-

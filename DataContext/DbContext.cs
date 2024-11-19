@@ -6,6 +6,7 @@ using System.Collections;
 using System.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace reportesApi.DataContext
 {
@@ -124,6 +125,11 @@ namespace reportesApi.DataContext
             {
                 this.SqlCon.Close();
             }
+        }
+
+        internal DataSet Fill(string v, List<SqlParameter> parametros)
+        {
+            throw new NotImplementedException();
         }
     }
 }
