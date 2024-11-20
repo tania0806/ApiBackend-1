@@ -3,7 +3,8 @@ using System;
 public class GetTransferenciaModel
 {
    public int Id { get; set; }
-    public DateTime FechaMovimiento { get; set; }
+    public string FechaMovimiento { get; set; }
+    public int EntradaSalida{ get; set; }
     public string TipoMovimiento { get; set; }
     public int IdAlmacenOrigen { get; set; }
     public int IdAlmacenDestino { get; set; }
@@ -17,8 +18,8 @@ public class GetTransferenciaModel
 public class InsertTransferenciaModel
 {
    
-    public DateTime FechaMovimiento { get; set; }
-    public string TipoMovimiento { get; set; }
+    
+    public int EntradaSalida{ get; set; }
     public int IdAlmacenOrigen { get; set; }
     public int IdAlmacenDestino { get; set; }
     public int Insumo { get; set; }
@@ -29,8 +30,8 @@ public class InsertTransferenciaModel
 public class UpdateTransferenciaModel
 {
    public int Id { get; set; }
-    public DateTime FechaMovimiento { get; set; }
-    public string TipoMovimiento { get; set; }
+    
+    public int EntradaSalida{ get; set; }
     public int IdAlmacenOrigen { get; set; }
     public int IdAlmacenDestino { get; set; }
     public int Insumo { get; set; }

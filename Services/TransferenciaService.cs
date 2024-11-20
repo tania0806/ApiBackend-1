@@ -36,27 +36,39 @@ namespace reportesApi.Services
         //     ConexionDataAccess dac = new ConexionDataAccess(connection);
         //     parametros = new ArrayList();
         
-       public List<GetTransferenciaModel> GetTransferencia(DateTime FechaInicio, DateTime FechaFinal, int? IdAlmacen = null)
-   {
-                   
+         public List<GetTransferenciaModel> GetTransferencia(DateTime? FechaInicio = null, DateTime? FechaFinal = null, int? IdAlmacen = null, int? TipoMovimiento= null)
             {
                 ConexionDataAccess dac = new ConexionDataAccess(connection);
                 List<GetTransferenciaModel> lista = new List<GetTransferenciaModel>();
+                    // Agregar parámetros de fecha si no son nulos
+
+            if (FechaInicio.HasValue)
+                parametros.Add(new SqlParameter("@FechaInicio", FechaInicio.Value));
+            else
+                parametros.Add(new SqlParameter("@FechaInicio", DBNull.Value));
+
+            if (FechaFinal.HasValue)
+                parametros.Add(new SqlParameter("@FechaFinal", FechaFinal.Value));
+            else
+                parametros.Add(new SqlParameter("@FechaFinal", DBNull.Value));
+
+             if (IdAlmacen.HasValue)
+                 parametros.Add(new SqlParameter("@IdAlmacen", IdAlmacen.Value));
+             else
+                 parametros.Add(new SqlParameter("@IdAlmacen", DBNull.Value));
+
+             if (TipoMovimiento.HasValue)
+                 parametros.Add(new SqlParameter("@TipoMovimiento", TipoMovimiento.Value));
+             else
+                 parametros.Add(new SqlParameter("@TipoMovimiento", DBNull.Value));
 
                 try
                 {
-                    // Definir e inicializar los parámetros
-                    var parametros = new List<SqlParameter>
-                    {
-                        new SqlParameter("@FechaInicio", SqlDbType.DateTime) { Value = FechaInicio },
-                        new SqlParameter("@FechaFin", SqlDbType.DateTime) { Value = FechaFinal },
-                        new SqlParameter("@IdAlmacen", SqlDbType.Int) { Value = (object)IdAlmacen ?? DBNull.Value }
-                    };
+                    // Ejecutar el procedimiento almacenado
+                    DataSet ds = dac.Fill("sp_get_registrarmovimientos", parametros); // Asegúrate de pasar los parámetros correctos
 
-                    // Llamar al procedimiento almacenado con los parámetros
-                    DataSet ds = dac.Fill("sp_get_registrarmovimientos", parametros);
-
-                    if (ds.Tables[0].Rows.Count > 0)
+                    // Procesar resultados si hay datos
+                    if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                     {
                         lista = ds.Tables[0].AsEnumerable()
                             .Select(dataRow => new GetTransferenciaModel
@@ -67,24 +79,24 @@ namespace reportesApi.Services
                                 Insumo = int.Parse(dataRow["Insumo"].ToString()),
                                 DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
                                 Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
-                                FechaMovimiento = DateTime.Parse(dataRow["FechaMovimiento"].ToString()),
+                                FechaMovimiento = dataRow["FechaMovimiento"].ToString(),
+                                EntradaSalida = int.Parse(dataRow["EntradaSalida"].ToString()),
                                 TipoMovimiento = dataRow["TipoMovimiento"].ToString(),
                                 Estatus = int.Parse(dataRow["Estatus"].ToString()),
-                                Fecha_registra = dataRow["Fecha_registro"].ToString(),
+                                Fecha_registra = dataRow["Fecha_registra"].ToString(),
                                 Usuario_registra = dataRow["Usuario_registra"].ToString(),
                             }).ToList();
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine($"Error: {ex.Message}");
                     throw ex;
                 }
 
                 return lista;
-      } 
- }
-    
+            }
+                
 
         public string InsertTransferencia(InsertTransferenciaModel rm)
         {
@@ -97,8 +109,8 @@ namespace reportesApi.Services
             parametros.Add(new SqlParameter { ParameterName = "@IdAlmacenDestino", SqlDbType = System.Data.SqlDbType.Int, Value = rm.IdAlmacenDestino});
             parametros.Add(new SqlParameter { ParameterName = "@Insumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = rm.Insumo});
             parametros.Add(new SqlParameter { ParameterName = "@Cantidad", SqlDbType = System.Data.SqlDbType.Decimal, Value = rm.Cantidad});
-            parametros.Add(new SqlParameter { ParameterName = "@TipoMovimiento", SqlDbType = System.Data.SqlDbType.VarChar, Value = rm.TipoMovimiento});
-            parametros.Add(new SqlParameter { ParameterName = "@FechaMovimiento", SqlDbType = System.Data.SqlDbType.DateTime, Value = rm.FechaMovimiento});
+            parametros.Add(new SqlParameter { ParameterName = "@EntradaSalida", SqlDbType = System.Data.SqlDbType.Int, Value = rm.EntradaSalida});
+            
             parametros.Add(new SqlParameter { ParameterName = "@Usuario_registra", SqlDbType = System.Data.SqlDbType.Int, Value = rm.Usuario_registra});
 
          try 
@@ -127,8 +139,8 @@ namespace reportesApi.Services
             parametros.Add(new SqlParameter { ParameterName = "@IdAlmecnDestino", SqlDbType = System.Data.SqlDbType.Int, Value = rm.IdAlmacenDestino});
             parametros.Add(new SqlParameter { ParameterName = "@Insumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = rm.Insumo});
             parametros.Add(new SqlParameter { ParameterName = "@Cantidad", SqlDbType = System.Data.SqlDbType.Decimal, Value = rm.Cantidad});
-            parametros.Add(new SqlParameter { ParameterName = "@TipoMovimiento", SqlDbType = System.Data.SqlDbType.VarChar, Value = rm.TipoMovimiento});
-            parametros.Add(new SqlParameter { ParameterName = "@FechaMovimiento", SqlDbType = System.Data.SqlDbType.DateTime, Value = rm.FechaMovimiento});
+            parametros.Add(new SqlParameter { ParameterName = "@EntradaSalida", SqlDbType = System.Data.SqlDbType.Int, Value = rm.EntradaSalida});
+           
             parametros.Add(new SqlParameter { ParameterName = "@Usuario_registra", SqlDbType = System.Data.SqlDbType.Int, Value = rm.Usuario_registra});
 
 
