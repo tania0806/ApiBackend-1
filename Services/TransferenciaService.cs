@@ -36,67 +36,72 @@ namespace reportesApi.Services
         //     ConexionDataAccess dac = new ConexionDataAccess(connection);
         //     parametros = new ArrayList();
         
-         public List<GetTransferenciaModel> GetTransferencia(DateTime? FechaInicio = null, DateTime? FechaFinal = null, int? IdAlmacen = null, int? TipoMovimiento= null)
-            {
-                ConexionDataAccess dac = new ConexionDataAccess(connection);
-                List<GetTransferenciaModel> lista = new List<GetTransferenciaModel>();
-                    // Agregar parámetros de fecha si no son nulos
+        public List<GetTransferenciaModel> GetTransferencia(DateTime? FechaInicio = null, DateTime? FechaFinal = null, int? IdAlmacen = null, int? TipoMovimiento = null)
+{
+    ConexionDataAccess dac = new ConexionDataAccess(connection);
+    List<GetTransferenciaModel> lista = new List<GetTransferenciaModel>();
 
-            if (FechaInicio.HasValue)
-                parametros.Add(new SqlParameter("@FechaInicio", FechaInicio.Value));
-            else
-                parametros.Add(new SqlParameter("@FechaInicio", DBNull.Value));
+    // Crear la lista de parámetros
+    var parametros = new List<SqlParameter>();
 
-            if (FechaFinal.HasValue)
-                parametros.Add(new SqlParameter("@FechaFinal", FechaFinal.Value));
-            else
-                parametros.Add(new SqlParameter("@FechaFinal", DBNull.Value));
+    // Agregar parámetros de fecha si no son nulos
+    if (FechaInicio.HasValue)
+        parametros.Add(new SqlParameter("@FechaInicio", FechaInicio.Value));
+    else
+        parametros.Add(new SqlParameter("@FechaInicio", DBNull.Value));
 
-             if (IdAlmacen.HasValue)
-                 parametros.Add(new SqlParameter("@IdAlmacen", IdAlmacen.Value));
-             else
-                 parametros.Add(new SqlParameter("@IdAlmacen", DBNull.Value));
+    if (FechaFinal.HasValue)
+        parametros.Add(new SqlParameter("@FechaFinal", FechaFinal.Value));
+    else
+        parametros.Add(new SqlParameter("@FechaFinal", DBNull.Value));
 
-             if (TipoMovimiento.HasValue)
-                 parametros.Add(new SqlParameter("@TipoMovimiento", TipoMovimiento.Value));
-             else
-                 parametros.Add(new SqlParameter("@TipoMovimiento", DBNull.Value));
+    // Agregar parámetro de IdAlmacen si no es nulo
+    if (IdAlmacen.HasValue)
+        parametros.Add(new SqlParameter("@IdAlmacen", IdAlmacen.Value));
+    else
+        parametros.Add(new SqlParameter("@IdAlmacen", DBNull.Value));
 
-                try
+    // Agregar parámetro de TipoMovimiento si no es nulo
+    if (TipoMovimiento.HasValue)
+        parametros.Add(new SqlParameter("@TipoMovimiento", TipoMovimiento.Value));
+    else
+        parametros.Add(new SqlParameter("@TipoMovimiento", DBNull.Value));
+
+    try
+    {
+        // Ejecutar el procedimiento almacenado
+        DataSet ds = dac.Fill("sp_get_registrarmovimientos", parametros);
+
+        // Procesar resultados si hay datos
+        if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+        {
+            lista = ds.Tables[0].AsEnumerable()
+                .Select(dataRow => new GetTransferenciaModel
                 {
-                    // Ejecutar el procedimiento almacenado
-                    DataSet ds = dac.Fill("sp_get_registrarmovimientos", parametros); // Asegúrate de pasar los parámetros correctos
+                    Id = int.Parse(dataRow["Id"].ToString()),
+                    IdAlmacenOrigen = int.Parse(dataRow["IdAlmacenOrigen"].ToString()),
+                    IdAlmacenDestino = int.Parse(dataRow["IdAlmacenDestino"].ToString()),
+                    Insumo = int.Parse(dataRow["Insumo"].ToString()),
+                    DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
+                    Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
+                    FechaMovimiento = dataRow["FechaMovimiento"].ToString(),
+                    EntradaSalida = int.Parse(dataRow["EntradaSalida"].ToString()),
+                    TipoMovimiento = dataRow["TipoMovimiento"].ToString(),
+                    Estatus = int.Parse(dataRow["Estatus"].ToString()),
+                    Fecha_registra = dataRow["Fecha_registra"].ToString(),
+                    Usuario_registra = dataRow["Usuario_registra"].ToString(),
+                }).ToList();
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error al obtener transferencias: {ex.Message}");
+        throw;
+    }
 
-                    // Procesar resultados si hay datos
-                    if (ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                    {
-                        lista = ds.Tables[0].AsEnumerable()
-                            .Select(dataRow => new GetTransferenciaModel
-                            {
-                                Id = int.Parse(dataRow["Id"].ToString()),
-                                IdAlmacenOrigen = int.Parse(dataRow["IdAlmacenOrigen"].ToString()),
-                                IdAlmacenDestino = int.Parse(dataRow["IdAlmacenDestino"].ToString()),
-                                Insumo = int.Parse(dataRow["Insumo"].ToString()),
-                                DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
-                                Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
-                                FechaMovimiento = dataRow["FechaMovimiento"].ToString(),
-                                EntradaSalida = int.Parse(dataRow["EntradaSalida"].ToString()),
-                                TipoMovimiento = dataRow["TipoMovimiento"].ToString(),
-                                Estatus = int.Parse(dataRow["Estatus"].ToString()),
-                                Fecha_registra = dataRow["Fecha_registra"].ToString(),
-                                Usuario_registra = dataRow["Usuario_registra"].ToString(),
-                            }).ToList();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error: {ex.Message}");
-                    throw ex;
-                }
+    return lista;
+}
 
-                return lista;
-            }
-                
 
         public string InsertTransferencia(InsertTransferenciaModel rm)
         {
