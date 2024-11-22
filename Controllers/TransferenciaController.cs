@@ -175,88 +175,41 @@ namespace reportesApi.Controllers
 //         return new JsonResult(objectResponse);
 //     }
 // }
-        [HttpGet("GetTransferencia")]
-            public IActionResult GetTramsferencia( [FromQuery] string? FechaInicio = null, 
-            [FromQuery] string? Fechafinal = null,[FromQuery] int? IdAlmacen = null,
- [FromQuery] int? TipoMovimiento = null)
-                {
-                    
-                    var objectResponse = Helper.GetStructResponse();
-            try
-            {
-                // Conversión de fechas a DateTime? (opcional)
-                DateTime? fechaInicioParsed = string.IsNullOrWhiteSpace(FechaInicio) 
-                    ? (DateTime?)null 
-                    : DateTime.ParseExact(FechaInicio, "yyyy-MM-dd", null);
-                DateTime? fechaFinalParsed = string.IsNullOrWhiteSpace(Fechafinal) 
-                    ? (DateTime?)null 
-                    : DateTime.ParseExact(Fechafinal, "yyyy-MM-dd", null);
-                // Obteniendo los datos del servicio
-                var data = _TransferenciaService.GetTransferencia(fechaInicioParsed, fechaFinalParsed, IdAlmacen, TipoMovimiento);
-            
-                // Creando el archivo Excel en memoria
-                using (var package = new ExcelPackage())
-                {
-                    var worksheet = package.Workbook.Worksheets.Add("RenglonesMovimiento");
 
-                    // Agrega encabezados
-                    worksheet.Cells[1, 1].Value = "Id";
-                                worksheet.Cells[1, 2].Value = "IdAlmacenOrigen";
-                                worksheet.Cells[1, 3].Value = "IdAlmacenDestino";
-                                worksheet.Cells[1, 4].Value = "Insumo";
-                                worksheet.Cells[1, 5].Value = "DescripcionInsumo";
-                                worksheet.Cells[1, 6].Value = "Cantidad";
-                                worksheet.Cells[1, 7].Value = "TipoMovimiento";
-                                worksheet.Cells[1, 8].Value = "Estatus";
-                                worksheet.Cells[1, 9].Value = "Fecha_registra";
-                                worksheet.Cells[1, 10].Value = "Usuario_registra";
-                                worksheet.Cells[1, 11].Value = "FechaMovimiento";
-                                worksheet.Cells[1, 12].Value = "EntradaSalida";
-
-
-                    // Aquí iteramos sobre los datos y llenamos el Excel
-                    int row = 2;
-                    foreach (var item in data)
+            [HttpGet("GetTransferenciasES")]
+                    public IActionResult GetTransferencias(int? IdAlmacen = null, DateTime? fechaInicio = null, DateTime? fechaFinal = null, int? tipoMovimiento = null)
                     {
-                        worksheet.Cells[row, 1].Value = item.Id;
-                                    worksheet.Cells[row, 2].Value = item.IdAlmacenOrigen;
-                                    worksheet.Cells[row, 3].Value = item.IdAlmacenDestino;
-                                    worksheet.Cells[row, 4].Value = item.Insumo;
-                                    worksheet.Cells[row, 5].Value = item.DescripcionInsumo;
-                                    worksheet.Cells[row, 6].Value = item.Cantidad;
-                                    worksheet.Cells[row, 7].Value = item.TipoMovimiento;
-                                    worksheet.Cells[row, 8].Value = item.Estatus;
-                                    worksheet.Cells[row, 9].Value = item.Fecha_registra;
-                                    worksheet.Cells[row, 10].Value = item.Usuario_registra;
-                                    worksheet.Cells[row, 11].Value = item.FechaMovimiento;
-                                    worksheet.Cells[row, 12].Value = item.EntradaSalida;
-                                    row++; 
-                        row++;
+                        var objectResponse = Helper.GetStructResponse();
+                        try
+                        {
+                            objectResponse.StatusCode = (int)HttpStatusCode.OK;
+                            objectResponse.success = true;
+                            objectResponse.message = "Transferencias obtenidas con éxito";
+                            objectResponse.response = _TransferenciaService.GetTransferencias( IdAlmacen, fechaInicio, fechaFinal, tipoMovimiento);
+                        }
+                        catch (Exception ex)
+                        {
+                            objectResponse.message = ex.Message;
+                        }
+                        return new JsonResult(objectResponse);
                     }
-
-                    // Configura el estilo del encabezado
-                    using (var range = worksheet.Cells[1, 1, 1, 10])
+                     [HttpGet("GetTransferenciasES2")]
+                    public IActionResult GetT(int? IdAlmacen = null, DateTime? fechaInicio = null, DateTime? fechaFinal = null, int? tipoMovimiento = null)
                     {
-                        range.Style.Font.Bold = true;
-                        range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                        range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+                        var objectResponse = Helper.GetStructResponse();
+                        try
+                        {
+                            objectResponse.StatusCode = (int)HttpStatusCode.OK;
+                            objectResponse.success = true;
+                            objectResponse.message = "Transferencias obtenidas con éxito";
+                            objectResponse.response = _TransferenciaService.GetT( IdAlmacen, fechaInicio, fechaFinal, tipoMovimiento);
+                        }
+                        catch (Exception ex)
+                        {
+                            objectResponse.message = ex.Message;
+                        }
+                        return new JsonResult(objectResponse);
                     }
-
-                    // Guarda el archivo en un arreglo de bytes
-                    var excelBytes = package.GetAsByteArray();
-
-                    // Retorna el archivo como una descarga
-                    return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteIdDestino.xlsx");
-                }
-            }
-            catch (Exception ex)
-            {
-                objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
-                objectResponse.success = false;
-                objectResponse.message = ex.Message;
-                return new JsonResult(objectResponse);
-            }
-        }
         
 
         [HttpPut("UpdateTransferencias")]
