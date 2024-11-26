@@ -31,6 +31,7 @@ namespace reportesApi.Controllers
         
 
         Encrypt enc = new Encrypt();
+        private IEnumerable<object> data;
 
         public TransferenciaController(TransferenciaService TransferenciaService, ILogger<TransferenciaController> logger, IJwtAuthenticationService authService) {
             _TransferenciaService = TransferenciaService;
@@ -177,97 +178,177 @@ namespace reportesApi.Controllers
 //     }
 // }
             [HttpGet("GetTransferenciasES")]
-            public IActionResult GetTransferencias(int? IdAlmacen = null, DateTime? fechaInicio = null, DateTime? fechaFinal = null, int? tipoMovimiento = null, bool generarExcel = false)
+            public IActionResult GetTransferencias(int? IdAlmacen = null, DateTime? fechaInicio = null, DateTime? fechaFinal = null, int? tipoMovimiento = null, bool GenerarExcel = false)
             {
                 var objectResponse = Helper.GetStructResponse();
                 try
                 {
-                    var transferencias = _TransferenciaService.GetTransferencias(IdAlmacen, fechaInicio, fechaFinal, tipoMovimiento);
+                   var data = _TransferenciaService.GetTransferencias(IdAlmacen, fechaInicio, fechaFinal,  tipoMovimiento);
 
-                    if (generarExcel)
-                    {
-                        var excelFile = GenerateExcelReport(transferencias);  // Método para generar el archivo Excel
-                        return File(excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Transferencias.xlsx");
-                    }
 
-                    objectResponse.StatusCode = (int)HttpStatusCode.OK;
-                    objectResponse.success = true;
-                    objectResponse.message = "Transferencias obtenidas con éxito";
-                    objectResponse.response = transferencias;
+                     if (GenerarExcel)
+         {
+            // Generar Excel
+             using (var package = new ExcelPackage())
+             {
+                 var worksheet = package.Workbook.Worksheets.Add("Transferencia");
+
+                 // Agrega encabezados
+                 worksheet.Cells[1, 1].Value = "Id";
+                 worksheet.Cells[1, 2].Value = "IdAlmacenOrigen";
+                worksheet.Cells[1, 3].Value = "IdAlmacenDestino";
+                 worksheet.Cells[1, 4].Value = "Insumo";
+                 worksheet.Cells[1, 5].Value = "DescripcionInsumo";
+                 worksheet.Cells[1, 6].Value = "Cantidad";
+                 worksheet.Cells[1, 7].Value = "TipoMovimiento";
+                 worksheet.Cells[1, 8].Value = "Estatus";
+                 worksheet.Cells[1, 9].Value = "Fecha_registra";
+                 worksheet.Cells[1, 10].Value = "Usuario_registra";
+                 worksheet.Cells[1, 11].Value = "FechaMovimiento";
+                 worksheet.Cells[1, 12].Value = "EntradaSalida";
+
+                // Estilos y datos
+                 using (var range = worksheet.Cells[1, 1, 1, 12])
+                 {
+                     range.Style.Font.Bold = true;
+                     range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                     range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightBlue);
+                 }
+
+                 int row = 2;
+                 foreach (var item in data)
+                 {
+                     worksheet.Cells[row, 1].Value = item.Id;
+                     worksheet.Cells[row, 2].Value = item.IdAlmacenOrigen;
+                     worksheet.Cells[row, 3].Value = item.IdAlmacenDestino;
+                     worksheet.Cells[row, 4].Value = item.Insumo;
+                     worksheet.Cells[row, 5].Value = item.DescripcionInsumo;
+                     worksheet.Cells[row, 6].Value = item.Cantidad;
+                     worksheet.Cells[row, 7].Value = item.TipoMovimiento;
+                    worksheet.Cells[row, 8].Value = item.Estatus;
+                     worksheet.Cells[row, 9].Value = item.Fecha_registra;
+                     worksheet.Cells[row, 10].Value = item.Usuario_registra;
+                     worksheet.Cells[row, 11].Value = item.FechaMovimiento;
+                    worksheet.Cells[row, 12].Value = item.EntradaSalida;
+                   row++;
                 }
-                catch (Exception ex)
-                {
-                    objectResponse.message = ex.Message;
-                }
-                return new JsonResult(objectResponse);
-            }
 
-        private byte[] GenerateExcelReport(List<GetTransferenciaModel> transferencias)
+                 worksheet.Cells.AutoFitColumns();
+                 var excelBytes = package.GetAsByteArray();
+
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "TransferenciasReporte.xlsx");
+             }
+         }
+         else
         {
-            throw new NotImplementedException();
-        }
-
-        // private byte[] GenerateExcelReport(IEnumerable<transferencia> transferencias)
-        //     {
-        //         using (var package = new ExcelPackage())
-        //         {
-        //             var worksheet = package.Workbook.Worksheets.Add("Transferencias");
-
-        //             // Encabezado de las columnas
-        //             worksheet.Cells[1, 1].Value = "Id";
-        //             worksheet.Cells[1, 2].Value = "Id Almacen Origen";
-        //             worksheet.Cells[1, 3].Value = "Id Almacen Destino";
-        //             worksheet.Cells[1, 4].Value = "Insumo";
-        //             worksheet.Cells[1, 5].Value = "Descripcion Insumo";
-        //             worksheet.Cells[1, 6].Value = "Cantidad";
-        //             worksheet.Cells[1, 7].Value = "Fecha Movimiento";
-        //             worksheet.Cells[1, 8].Value = "Entrada/Salida";
-        //             worksheet.Cells[1, 9].Value = "Tipo Movimiento";
-        //             worksheet.Cells[1, 10].Value = "Estatus";
-        //             worksheet.Cells[1, 11].Value = "Fecha Registra";
-        //             worksheet.Cells[1, 12].Value = "Usuario Registra";
-
-        //             // Llenar datos
-        //             int row = 2;
-        //             foreach (var transferencia in transferencias)
-        //             {
-        //                 worksheet.Cells[row, 1].Value = transferencia.Id;
-        //                 worksheet.Cells[row, 2].Value = transferencia.IdAlmacenOrigen;
-        //                 worksheet.Cells[row, 3].Value = transferencia.IdAlmacenDestino;
-        //                 worksheet.Cells[row, 4].Value = transferencia.Insumo;
-        //                 worksheet.Cells[row, 5].Value = transferencia.DescripcionInsumo;
-        //                 worksheet.Cells[row, 6].Value = transferencia.Cantidad;
-        //                 worksheet.Cells[row, 7].Value = transferencia.FechaMovimiento;
-        //                 worksheet.Cells[row, 8].Value = transferencia.EntradaSalida == 1 ? "Entrada" : "Salida";  // Asumiendo que EntradaSalida es un int (1 para Entrada, 2 para Salida)
-        //                 worksheet.Cells[row, 9].Value = transferencia.TipoMovimiento;
-        //                 worksheet.Cells[row, 10].Value = transferencia.Estatus;
-        //                 worksheet.Cells[row, 11].Value = transferencia.FechaRegistra;
-        //                 worksheet.Cells[row, 12].Value = transferencia.UsuarioRegistra;
-        //                 row++;
-        //             }
-
-        //             return package.GetAsByteArray();
-        //         }
-        //     }
+             objectResponse.data = data;
+            objectResponse.success = true;
+             objectResponse.message = "Datos obtenidos correctamente.";
+             return new JsonResult(objectResponse);
+         }
+     }
+    catch (Exception ex)
+     {
+         objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
+         objectResponse.success = false;
+         objectResponse.message = "Error inesperado: " + ex.Message;
+         return new JsonResult(objectResponse);
+     }
+            }
 
 
              [HttpGet("GetTransferenciasES2")]
-                    public IActionResult GetT(int? IdAlmacen = null, DateTime? fechaInicio = null, DateTime? fechaFinal = null, int? tipoMovimiento = null)
-                    {
-                        var objectResponse = Helper.GetStructResponse();
-                        try
-                        {
-                            objectResponse.StatusCode = (int)HttpStatusCode.OK;
-                            objectResponse.success = true;
-                            objectResponse.message = "Transferencias obtenidas con éxito";
-                            objectResponse.response = _TransferenciaService.GetT( IdAlmacen, fechaInicio, fechaFinal, tipoMovimiento);
-                        }
-                        catch (Exception ex)
-                        {
-                            objectResponse.message = ex.Message;
-                        }
-                        return new JsonResult(objectResponse);
-                    }
+public IActionResult GetT(int? IdAlmacen = null, DateTime? fechaInicio = null, DateTime? fechaFinal = null, int? tipoMovimiento = null, bool GenerarExcel = false)
+{
+    var objectResponse = Helper.GetStructResponse();
+    try
+    {
+        var data = _TransferenciaService.GetT(IdAlmacen, fechaInicio, fechaFinal, tipoMovimiento);
+
+        if (GenerarExcel)
+        {
+            // Generar archivo Excel
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Transferencias");
+
+                // Agrega encabezados
+                worksheet.Cells[1, 1].Value = "Id";
+               worksheet.Cells[1, 2].Value = "IdAlmacenOrigen";
+                worksheet.Cells[1, 3].Value = "IdAlmacenDestino";
+                 worksheet.Cells[1, 4].Value = "Insumo";
+                 worksheet.Cells[1, 5].Value = "DescripcionInsumo";
+                 worksheet.Cells[1, 6].Value = "Cantidad";
+                 worksheet.Cells[1, 7].Value = "TipoMovimiento";
+                 worksheet.Cells[1, 8].Value = "Estatus";
+                 worksheet.Cells[1, 9].Value = "Fecha_registra";
+                 worksheet.Cells[1, 10].Value = "Usuario_registra";
+                 worksheet.Cells[1, 11].Value = "FechaMovimiento";
+                 worksheet.Cells[1, 12].Value = "EntradaSalida";
+                // Aplicar estilos
+                using (var range = worksheet.Cells[1, 1, 1, 5])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                }
+
+                // Llenar datos
+                int row = 2;
+                foreach (var item in data)
+                {
+                    worksheet.Cells[row, 1].Value = item.Id;
+                    worksheet.Cells[row, 2].Value = item.IdAlmacenOrigen;
+                     worksheet.Cells[row, 3].Value = item.IdAlmacenDestino;
+                     worksheet.Cells[row, 4].Value = item.Insumo;
+                     worksheet.Cells[row, 5].Value = item.DescripcionInsumo;
+                     worksheet.Cells[row, 6].Value = item.Cantidad;
+                     worksheet.Cells[row, 7].Value = item.TipoMovimiento;
+                    worksheet.Cells[row, 8].Value = item.Estatus;
+                     worksheet.Cells[row, 9].Value = item.Fecha_registra;
+                     worksheet.Cells[row, 10].Value = item.Usuario_registra;
+                     worksheet.Cells[row, 11].Value = item.FechaMovimiento;
+                    worksheet.Cells[row, 12].Value = item.EntradaSalida;
+                    row++;
+                }
+
+                worksheet.Cells.AutoFitColumns();
+                var excelBytes = package.GetAsByteArray();
+
+                // Retornar archivo Excel
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteTransferencias.xlsx");
+            }
+        }
+        else
+        {
+            // Retornar datos en JSON si GenerarExcel es falso
+            if (data != null && data.Count == 0)
+            {
+                objectResponse.StatusCode = (int)HttpStatusCode.OK;
+                objectResponse.success = true;
+                objectResponse.message = "Transferencias obtenidas con éxito.";
+                objectResponse.response = data;
+            }
+            else
+            {
+                objectResponse.StatusCode = (int)HttpStatusCode.NotFound;
+                objectResponse.success = false;
+                objectResponse.message = "No se encontraron transferencias para los parámetros proporcionados.";
+                objectResponse.response = null;
+            }
+            return new JsonResult(objectResponse);
+        }
+    }
+    catch (Exception ex)
+    {
+        objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
+        objectResponse.success = false;
+        objectResponse.message = "Error inesperado: " + ex.Message;
+        return new JsonResult(objectResponse);
+    }
+}
+
+
         
 
         [HttpPut("UpdateTransferencias")]
@@ -313,5 +394,9 @@ namespace reportesApi.Controllers
 
             return new JsonResult(objectResponse);
         }
+    }
+
+    internal class transferencia
+    {
     }
 }
