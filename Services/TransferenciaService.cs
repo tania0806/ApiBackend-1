@@ -58,7 +58,9 @@ namespace reportesApi.Services
                             {
                                 Id = int.Parse(dataRow["Id"].ToString()),
                                 IdAlmacenOrigen = int.Parse(dataRow["IdAlmacenOrigen"].ToString()),
+                                NombreAlmacenOrigen = dataRow["NombreAlmacenOrigen"].ToString(),
                                 IdAlmacenDestino = int.Parse(dataRow["IdAlmacenDestino"].ToString()),
+                                 NombreAlmacenDestino = dataRow["NombreAlmacenDestino"].ToString(),
                                 Insumo = int.Parse(dataRow["Insumo"].ToString()),
                                 DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
                                 Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
@@ -99,7 +101,9 @@ namespace reportesApi.Services
                             {
                                 Id = int.Parse(dataRow["Id"].ToString()),
                                 IdAlmacenOrigen = int.Parse(dataRow["IdAlmacenOrigen"].ToString()),
+                                NombreAlmacenOrigen = dataRow["NombreAlmacenOrigen"].ToString(),
                                 IdAlmacenDestino = int.Parse(dataRow["IdAlmacenDestino"].ToString()),
+                                NombreAlmacenDestino = dataRow["NombreAlmacenDestino"].ToString(),
                                 Insumo = int.Parse(dataRow["Insumo"].ToString()),
                                 DescripcionInsumo = dataRow["DescripcionInsumo"].ToString(),
                                 Cantidad = decimal.Parse(dataRow["Cantidad"].ToString()),
@@ -158,11 +162,11 @@ namespace reportesApi.Services
 
 
             parametros.Add(new SqlParameter { ParameterName = "@Id", SqlDbType = System.Data.SqlDbType.Int, Value = rm.Id });
-            parametros.Add(new SqlParameter { ParameterName = "@IdAlmecnDestino", SqlDbType = System.Data.SqlDbType.Int, Value = rm.IdAlmacenDestino});
+            parametros.Add(new SqlParameter { ParameterName = "@IdAlmacenOrigen", SqlDbType = System.Data.SqlDbType.Int, Value = rm.IdAlmacenOrigen});
+            parametros.Add(new SqlParameter { ParameterName = "@IdAlmacenDestino", SqlDbType = System.Data.SqlDbType.Int, Value = rm.IdAlmacenDestino});
             parametros.Add(new SqlParameter { ParameterName = "@Insumo", SqlDbType = System.Data.SqlDbType.VarChar, Value = rm.Insumo});
             parametros.Add(new SqlParameter { ParameterName = "@Cantidad", SqlDbType = System.Data.SqlDbType.Decimal, Value = rm.Cantidad});
             parametros.Add(new SqlParameter { ParameterName = "@EntradaSalida", SqlDbType = System.Data.SqlDbType.Int, Value = rm.EntradaSalida});
-           
             parametros.Add(new SqlParameter { ParameterName = "@Usuario_registra", SqlDbType = System.Data.SqlDbType.Int, Value = rm.Usuario_registra});
 
 

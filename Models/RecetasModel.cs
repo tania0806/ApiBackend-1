@@ -7,6 +7,8 @@ namespace reportesApi.Models
         public string Nombre { get; set; }
         public int Estatus{ get; set; }
         public string FechaCreacion {get; set;}
+        public string FechaInicio {get; set;}
+        public string FechaFinal {get; set;}
         public string UsuarioRegistra { get; set; }   
      }
 

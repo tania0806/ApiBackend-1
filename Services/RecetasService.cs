@@ -29,38 +29,92 @@ namespace reportesApi.Services
 
              _webHostEnvironment = webHostEnvironment;
              
-        }
+        } 
+            
+            public List<GetRecetasModel> GetRecetaId(int Id)
+{
+    ConexionDataAccess dac = new ConexionDataAccess(connection);
+    ArrayList parametros = new ArrayList();
+    parametros.Add(new SqlParameter { ParameterName = "@Id", SqlDbType = SqlDbType.Int, Value = Id });
 
-        public List<GetRecetasModel> GetRecetas()
+    List<GetRecetasModel> lista = new List<GetRecetasModel>();
+    try
+    {
+        // Llamada al procedimiento almacenado con el parámetro Id
+        DataSet ds = dac.Fill("sp_get_recetas", parametros);
+
+        // Comprobar si hay datos en la respuesta
+        if (ds.Tables[0].Rows.Count > 0)
         {
-            ConexionDataAccess dac = new ConexionDataAccess(connection);
-            GetRecetasModel recetas = new GetRecetasModel();
-
-            List<GetRecetasModel> lista = new List<GetRecetasModel>();
-            try
-            {
-                parametros = new ArrayList();
-                DataSet ds = dac.Fill("sp_get_recetas", parametros);
-                if (ds.Tables[0].Rows.Count > 0)
+            // Mapear los resultados a la lista de GetRecetasModel
+            lista = ds.Tables[0].AsEnumerable()
+                .Select(dataRow => new GetRecetasModel
                 {
-
-                  lista = ds.Tables[0].AsEnumerable()
-                    .Select(dataRow => new GetRecetasModel {
-                        Id = int.Parse(dataRow["Id"].ToString()),
-                        Nombre = dataRow["Nombre"].ToString(),
-                        Estatus = int.Parse(dataRow["Estatus"].ToString()),
-                        FechaCreacion = dataRow["FechaCreacion"].ToString(),
-                        UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
-                      
-                    }).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return lista;
+                    Id = int.Parse(dataRow["Id"].ToString()),
+                    Nombre = dataRow["Nombre"].ToString(),
+                    Estatus = int.Parse(dataRow["Estatus"].ToString()),
+                    FechaCreacion = dataRow["FechaCreacion"].ToString(),
+                    UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
+                }).ToList();
         }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        throw ex;
+    }
+
+    return lista;
+}
+
+
+        public List<GetRecetasModel> GetRecetas(DateTime? fechaInicio = null, DateTime? fechafinal = null)
+{
+    ConexionDataAccess dac = new ConexionDataAccess(connection);
+    var parametros = new ArrayList(); // Inicializar correctamente antes de usar.
+
+    // Agregar parámetros de fecha.
+    if (fechaInicio.HasValue)
+        parametros.Add(new SqlParameter("@FechaInicio", fechaInicio.Value));
+    else
+        parametros.Add(new SqlParameter("@FechaInicio", DBNull.Value));
+
+    if (fechafinal.HasValue)
+        parametros.Add(new SqlParameter("@FechaFinal", fechafinal.Value));
+    else
+        parametros.Add(new SqlParameter("@FechaFinal", DBNull.Value));
+
+    var lista = new List<GetRecetasModel>();
+    try
+    {
+        // Llamada al procedimiento almacenado.
+        DataSet ds = dac.Fill("sp_get_recetasfecha", parametros);
+
+        // Verificar si hay datos y mapearlos al modelo.
+        if (ds.Tables[0].Rows.Count > 0)
+        {
+            lista = ds.Tables[0].AsEnumerable()
+                .Select(dataRow => new GetRecetasModel
+                {
+                    Id = int.Parse(dataRow["Id"].ToString()),
+                    Nombre = dataRow["Nombre"].ToString(),
+                    Estatus = int.Parse(dataRow["Estatus"].ToString()),
+                    FechaCreacion = dataRow["FechaCreacion"].ToString(),
+                    UsuarioRegistra = dataRow["UsuarioRegistra"].ToString(),
+                })
+                .ToList();
+        }
+    }
+    catch (Exception ex)
+    {
+        // Agregar información adicional al mensaje de error para diagnóstico.
+        Console.WriteLine($"Error al ejecutar 'sp_get_recetasfecha': {ex.Message}");
+        throw;
+    }
+
+    return lista;
+}
+
 
         public string InsertReceta(InsertRecetasModel receta)
         {
@@ -125,6 +179,11 @@ namespace reportesApi.Services
             {
                 throw ex;
             }
+        }
+
+        internal object GetRecetas(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

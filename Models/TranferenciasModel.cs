@@ -7,7 +7,9 @@ public class GetTransferenciaModel
     public int EntradaSalida{ get; set; }
     public string TipoMovimiento { get; set; }
     public int IdAlmacenOrigen { get; set; }
+     public string NombreAlmacenOrigen { get; set; }
     public int IdAlmacenDestino { get; set; }
+    public string NombreAlmacenDestino { get; set; }
     public int Insumo { get; set; }
     public string DescripcionInsumo {get; set;}
     public decimal Cantidad { get; set; }
@@ -36,7 +38,6 @@ public class UpdateTransferenciaModel
     public int IdAlmacenDestino { get; set; }
     public int Insumo { get; set; }
     public decimal Cantidad { get; set; }
-    public string Fecha_registro {get; set;}
+
     public string Usuario_registra {get; set;}
-    public int Estatus {get; set;}
 }

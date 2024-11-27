@@ -203,19 +203,21 @@ namespace reportesApi.Controllers
             // Agregar encabezados   
             worksheet.Cell(1, 1).Value = "Id";
             worksheet.Cell(1, 2).Value = "IdAlmacenOrigen";
-            worksheet.Cell(1, 3).Value = "IdAlmacenDestino";
-            worksheet.Cell(1, 4).Value = "Insumo";
-            worksheet.Cell(1, 5).Value = "DescripcionInsumo";
-            worksheet.Cell(1, 6).Value = "Cantidad";
-            worksheet.Cell(1, 7).Value = "TipoMovimiento";
-            worksheet.Cell(1, 8).Value = "Estatus";
-            worksheet.Cell(1, 9).Value = "Fecha_registra";
-            worksheet.Cell(1, 10).Value = "UsuarioRegistra";
-            worksheet.Cell(1, 11).Value = "FechaMovimiento";
-            worksheet.Cell(1, 12).Value = "EntradaSalida";
+            worksheet.Cell(1, 3).Value = "NombreAlmacenOrigen";
+            worksheet.Cell(1, 4).Value = "IdAlmacenDestino";
+             worksheet.Cell(1, 5).Value = "NombreALmacenDestino";
+            worksheet.Cell(1, 6).Value = "Insumo";
+            worksheet.Cell(1, 7).Value = "DescripcionInsumo";
+            worksheet.Cell(1, 8).Value = "Cantidad";
+            worksheet.Cell(1, 9).Value = "TipoMovimiento";
+            worksheet.Cell(1, 10).Value = "Estatus";
+            worksheet.Cell(1, 11).Value = "Fecha_registra";
+            worksheet.Cell(1, 12).Value = "UsuarioRegistra";
+            worksheet.Cell(1, 13).Value = "FechaMovimiento";
+            worksheet.Cell(1, 14).Value = "EntradaSalida";
 
             // Aplicar estilos (Color de fondo y color de texto)
-            var headerRange = worksheet.Range("A1:L1"); // Seleccionamos el rango de encabezados
+            var headerRange = worksheet.Range("A1:N1"); // Seleccionamos el rango de encabezados
             headerRange.Style.Fill.BackgroundColor = XLColor.BabyPink; // Color de fondo azul claro
             headerRange.Style.Font.FontColor = XLColor.White; // Texto blanco
             headerRange.Style.Font.Bold = true; // Texto en negrita
@@ -226,17 +228,19 @@ namespace reportesApi.Controllers
             {
                 worksheet.Cell(row, 1).Value = item.Id;
                 worksheet.Cell(row, 2).Value = item.IdAlmacenOrigen;
-                worksheet.Cell(row,3).Value = item.IdAlmacenDestino;
-                worksheet.Cell(row, 4).Value = item.Insumo;
-                worksheet.Cell(row, 5).Value = item.DescripcionInsumo;
-                worksheet.Cell(row, 6).Value = item.Cantidad;
-                worksheet.Cell(row, 7).Value = item.TipoMovimiento;
-                worksheet.Cell(row, 8).Value = item.Estatus;
-                worksheet.Cell(row, 9).Value = item.Fecha_registra;
-                worksheet.Cell(row, 10).Value = item.Usuario_registra;
-                worksheet.Cell(row, 11).Value = item.FechaMovimiento;
-                worksheet.Cell(row, 12).Value = item.EntradaSalida;
-                var dataRange = worksheet.Range($"A{row}:L{row}");
+                worksheet.Cell(row, 3).Value = item.NombreAlmacenOrigen;
+                worksheet.Cell(row, 4).Value = item.IdAlmacenDestino;
+                worksheet.Cell(row, 5).Value = item.NombreAlmacenDestino;
+                worksheet.Cell(row, 6).Value = item.Insumo;
+                worksheet.Cell(row, 7).Value = item.DescripcionInsumo;
+                worksheet.Cell(row, 8).Value = item.Cantidad;
+                worksheet.Cell(row, 9).Value = item.TipoMovimiento;
+                worksheet.Cell(row, 10).Value = item.Estatus;
+                worksheet.Cell(row, 11).Value = item.Fecha_registra;
+                worksheet.Cell(row, 12).Value = item.Usuario_registra;
+                worksheet.Cell(row, 13).Value = item.FechaMovimiento;
+                worksheet.Cell(row, 14).Value = item.EntradaSalida;
+                var dataRange = worksheet.Range($"A{row}:N{row}");
                 if (row % 2 == 0) // Alternar color de fondo para filas pares
                 {
                     dataRange.Style.Fill.BackgroundColor = XLColor.LightGray;
@@ -291,17 +295,18 @@ public IActionResult GetT(int? IdAlmacen = null, DateTime? fechaInicio = null, D
             // Agregar encabezados   
             worksheet.Cell(1, 1).Value = "Id";
             worksheet.Cell(1, 2).Value = "IdAlmacenOrigen";
-            worksheet.Cell(1, 3).Value = "IdAlmacenDestino";
-            worksheet.Cell(1, 4).Value = "Insumo";
-            worksheet.Cell(1, 5).Value = "DescripcionInsumo";
-            worksheet.Cell(1, 6).Value = "Cantidad";
-            worksheet.Cell(1, 7).Value = "TipoMovimiento";
-            worksheet.Cell(1, 8).Value = "Estatus";
-            worksheet.Cell(1, 9).Value = "Fecha_registra";
-            worksheet.Cell(1, 10).Value = "UsuarioRegistra";
-            worksheet.Cell(1, 11).Value = "FechaMovimiento";
-            worksheet.Cell(1, 12).Value = "EntradaSalida";
-
+            worksheet.Cell(1, 3).Value = "NombreAlmacenOrigen";
+            worksheet.Cell(1, 4).Value = "IdAlmacenDestino";
+            worksheet.Cell(1, 5).Value = "NombreALmacenDestino";
+            worksheet.Cell(1, 6).Value = "Insumo";
+            worksheet.Cell(1, 7).Value = "DescripcionInsumo";
+            worksheet.Cell(1, 8).Value = "Cantidad";
+            worksheet.Cell(1, 9).Value = "TipoMovimiento";
+            worksheet.Cell(1, 10).Value = "Estatus";
+            worksheet.Cell(1, 11).Value = "Fecha_registra";
+            worksheet.Cell(1, 12).Value = "UsuarioRegistra";
+            worksheet.Cell(1, 13).Value = "FechaMovimiento";
+            worksheet.Cell(1, 14).Value = "EntradaSalida";
             // Aplicar estilos (Color de fondo y color de texto)
             var headerRange = worksheet.Range("A1:L1"); // Seleccionamos el rango de encabezados
             headerRange.Style.Fill.BackgroundColor = XLColor.Green; // Color de fondo azul claro
@@ -314,16 +319,18 @@ public IActionResult GetT(int? IdAlmacen = null, DateTime? fechaInicio = null, D
             {
                 worksheet.Cell(row, 1).Value = item.Id;
                 worksheet.Cell(row, 2).Value = item.IdAlmacenOrigen;
-                worksheet.Cell(row,3).Value = item.IdAlmacenDestino;
-                worksheet.Cell(row, 4).Value = item.Insumo;
-                worksheet.Cell(row, 5).Value = item.DescripcionInsumo;
-                worksheet.Cell(row, 6).Value = item.Cantidad;
-                worksheet.Cell(row, 7).Value = item.TipoMovimiento;
-                worksheet.Cell(row, 8).Value = item.Estatus;
-                worksheet.Cell(row, 9).Value = item.Fecha_registra;
-                worksheet.Cell(row, 10).Value = item.Usuario_registra;
-                worksheet.Cell(row, 11).Value = item.FechaMovimiento;
-                worksheet.Cell(row, 12).Value = item.EntradaSalida;
+                worksheet.Cell(row, 3).Value = item.NombreAlmacenOrigen;
+                worksheet.Cell(row, 4).Value = item.IdAlmacenDestino;
+                worksheet.Cell(row, 5).Value = item.NombreAlmacenDestino;
+                worksheet.Cell(row, 6).Value = item.Insumo;
+                worksheet.Cell(row, 7).Value = item.DescripcionInsumo;
+                worksheet.Cell(row, 8).Value = item.Cantidad;
+                worksheet.Cell(row, 9).Value = item.TipoMovimiento;
+                worksheet.Cell(row, 10).Value = item.Estatus;
+                worksheet.Cell(row, 11).Value = item.Fecha_registra;
+                worksheet.Cell(row, 12).Value = item.Usuario_registra;
+                worksheet.Cell(row, 13).Value = item.FechaMovimiento;
+                worksheet.Cell(row, 14).Value = item.EntradaSalida;
                 var dataRange = worksheet.Range($"A{row}:L{row}");
                 if (row % 2 == 0) // Alternar color de fondo para filas pares
                 {
