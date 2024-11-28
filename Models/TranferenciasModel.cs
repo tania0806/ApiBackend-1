@@ -7,7 +7,7 @@ public class GetTransferenciaModel
     public int EntradaSalida{ get; set; }
     public string TipoMovimiento { get; set; }
     public int IdAlmacenOrigen { get; set; }
-     public string NombreAlmacenOrigen { get; set; }
+    public string NombreAlmacenOrigen { get; set; }
     public int IdAlmacenDestino { get; set; }
     public string NombreAlmacenDestino { get; set; }
     public int Insumo { get; set; }

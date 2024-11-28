@@ -178,8 +178,8 @@ namespace reportesApi.Controllers
 //         return new JsonResult(objectResponse);
 //     }
 // }
-            [HttpGet("GetTransferenciasES")]
-            public IActionResult GetTransferencias(int? IdAlmacen = null, DateTime? fechaInicio = null, DateTime? fechaFinal = null, int? tipoMovimiento = null)
+         [HttpGet("GetTransferenciasES")]
+        public IActionResult GetTransferencias(int? IdAlmacen = null, DateTime? fechaInicio = null, DateTime? fechaFinal = null, int? tipoMovimiento = null)
             {
                var objectResponse = Helper.GetStructResponse();
 
@@ -205,7 +205,7 @@ namespace reportesApi.Controllers
             worksheet.Cell(1, 2).Value = "IdAlmacenOrigen";
             worksheet.Cell(1, 3).Value = "NombreAlmacenOrigen";
             worksheet.Cell(1, 4).Value = "IdAlmacenDestino";
-             worksheet.Cell(1, 5).Value = "NombreALmacenDestino";
+            worksheet.Cell(1, 5).Value = "NombreALmacenDestino";
             worksheet.Cell(1, 6).Value = "Insumo";
             worksheet.Cell(1, 7).Value = "DescripcionInsumo";
             worksheet.Cell(1, 8).Value = "Cantidad";
