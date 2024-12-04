@@ -66,30 +66,62 @@ namespace reportesApi.Controllers
          [HttpGet("GetDetalleReceta")]
         public IActionResult GetDetalleReceta([FromQuery] int IdReceta)
         {
-            var objectResponse = Helper.GetStructResponse();
+           try
+    {
+        // Obtener las recetas
+        var recetas = _DetalleRecetaService.GetDetalleReceta(IdReceta);
+        
+        // Verificar si hay recetas
+        if (recetas == null || recetas.Count == 0)
+        {
+            return NotFound("No se encontraron detalle de recetas.");
+        }
 
-            try
+        // Crear un nuevo archivo Excel
+        using (var package = new ExcelPackage())
+        {
+            // Crear una hoja de trabajo en el archivo Excel
+            var worksheet = package.Workbook.Worksheets.Add("DetalleRecetasId");
+
+            // Crear el encabezado
+            worksheet.Cells[1, 1].Value = "ID";
+            worksheet.Cells[1, 2].Value = "IdReceta";
+            worksheet.Cells[1, 3].Value = "Insumo";
+            worksheet.Cells[1, 4].Value = "DescripcionInsumo";
+            worksheet.Cells[1, 5].Value = "Cantidad";
+            worksheet.Cells[1, 6].Value = "Usuario Registra";
+
+
+            worksheet.Cells[1, 1, 1, 6].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+            worksheet.Cells[1, 1, 1, 6].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.DarkGray);
+
+            // Rellenar los datos
+            int row = 2; // Comenzar desde la fila 2 para los datos
+            foreach (var receta in recetas)
             {
-                objectResponse.StatusCode = (int)HttpStatusCode.OK;
-                objectResponse.success = true;
-                objectResponse.message = "DetalleReceta cargados exitosamente";
-                var resultado = _DetalleRecetaService.GetDetalleReceta(IdReceta);
-               
-               
-
-                // Llamando a la función y recibiendo los dos valores.
-               
-                 objectResponse.response = resultado;
+                worksheet.Cells[row, 1].Value = receta.Id;
+                worksheet.Cells[row, 2].Value = receta.IdReceta;
+                worksheet.Cells[row, 3].Value = receta.Insumo;
+                worksheet.Cells[row, 4].Value = receta.DescripcionInsumo;
+                 worksheet.Cells[row, 5].Value = receta.Cantidad;
+                worksheet.Cells[row, 6].Value = receta.UsuarioRegistra;
+                row++;
             }
 
-            catch (System.Exception ex)
-            {
-                objectResponse.StatusCode = (int)HttpStatusCode.InternalServerError;
-                objectResponse.success = false;
-                objectResponse.message = ex.Message;
-            }
+            // Establecer un nombre para el archivo Excel
+            var file = new FileInfo(Path.Combine(Directory.GetCurrentDirectory(), "DetalleReceta.xlsx"));
 
-            return new JsonResult(objectResponse);
+            // Guardar el archivo Excel en el disco
+            package.SaveAs(file);
+
+            // Devolver el archivo como una respuesta de descarga
+            return File(file.OpenRead(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "RecetasReport.xlsx");
+        }
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Error al generar el reporte: {ex.Message}");
+    }
         }
 
         [HttpPut("UpdateDetalleReceta")]
