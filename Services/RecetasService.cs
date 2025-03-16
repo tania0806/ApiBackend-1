@@ -31,7 +31,7 @@ namespace reportesApi.Services
              
         } 
             
-            public List<GetRecetasModel> GetRecetaId(int Id)
+    public List<GetRecetasModel> GetRecetaId(int Id)
 {
     ConexionDataAccess dac = new ConexionDataAccess(connection);
     ArrayList parametros = new ArrayList();
